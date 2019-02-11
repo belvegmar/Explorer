@@ -22,4 +22,4 @@ var SponsorShipSchema = new Schema({
   strict: false });
 
 
-module.exports = mongoose.model('Sponsor Ship', SponsorShipSchema);
+module.exports = mongoose.model('SponsorShips', SponsorShipSchema);
