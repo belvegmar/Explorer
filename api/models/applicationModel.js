@@ -12,13 +12,9 @@ var ApplicationSchema = new Schema({
     required: 'Kindly enter the status',
     enum: ['PENGING', 'REJECTED', 'DUE', 'ACCEPTED', 'CANCELLED']
   }],
-  comments: {
-    type: String,
-    required: 'Kindly enter the the comments'
-  },
+  comments: [String],
   rejectedReason: {
-    type: String,
-    required: 'Kindly enter the rejected reasons'
+    type: String
   },
   strict: false });
 
