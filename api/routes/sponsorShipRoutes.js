@@ -11,3 +11,4 @@ module.exports = function(app) {
 	.put(sponsorShips.update_an_sponsorShip)
     .delete(sponsorShips.delete_an_sponsorShip);
 };
+

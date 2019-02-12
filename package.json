@@ -10,7 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "dateformat": "^3.0.3",
     "express": "^4.16.4",
-    "mongoose": "^5.4.11"
+    "mongoose": "^5.4.11",
+    "nanoid": "^2.0.1"
   }
 }

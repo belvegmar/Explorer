@@ -2,6 +2,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+const generate = require('nanoid/generate');
+const dateFormat = require('dateFormat');
+
 var StageSchema = new Schema({
   title: {
     type: String,
@@ -44,7 +47,8 @@ var TripSchema = new Schema({
   requirements: [String],
   endDate: {
     type: Date,
-    required: 'Kindly enter the end date'
+    required: 'Kindly enter the end date',
+    validate: [dateValidator, 'Start Date must be less than End Date']
   },
   picture: {
     data: Buffer, contentType: String
@@ -57,6 +61,26 @@ var TripSchema = new Schema({
   },
   stages: [StageSchema]
 },  { strict: false });
+
+
+
+function dateValidator(value){
+  return this.startDate <= value;
+}
+
+
+
+var day=dateFormat(new Date(), "yymmdd")
+
+TripSchema.pre('save', function(callback){
+  var new_trip=this;
+  var date = new Date;
+
+  new_trip.ticker = [day, generate('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 4)].join('-')
+  callback();
+});
+
+
 
 module.exports = mongoose.model('Stages', StageSchema);
 module.exports = mongoose.model('Trips', TripSchema);

@@ -18,7 +18,9 @@ exports.create_an_actor = function(req, res) {
   var new_actor = new Actor(req.body);
   new_actor.save(function(err, actor) {
     if (err){
-      res.send(err);
+      if(err.name == 'ValidationError'){
+        res.status(422).send(err);
+      }
     }
     else{
       res.json(actor);

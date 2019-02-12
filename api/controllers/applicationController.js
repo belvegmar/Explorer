@@ -1,4 +1,5 @@
 'use strict';
+
 /*---------------APPLICATION----------------------*/
 var mongoose = require('mongoose'),
   Application = mongoose.model('Applications');

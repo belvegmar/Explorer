@@ -124,3 +124,4 @@ exports.delete_a_stage = function(req, res) {
     }
   });
 };
+
