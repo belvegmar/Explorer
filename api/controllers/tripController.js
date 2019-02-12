@@ -20,8 +20,11 @@ exports.create_a_trip = function(req, res) {
   var new_trip = new Trip(req.body);
   new_trip.save(function(err, trip) {
     if (err){
-      res.send(err);
-    }
+      if(err.name == 'ValidationError'){
+        res.status(422).send(err);
+      }else{
+        res.status(500).send(err)
+      }    }
     else{
       res.json(trip);
     }
@@ -44,8 +47,11 @@ exports.read_a_trip = function(req, res) {
 exports.update_a_trip = function(req, res) {
     Trip.findOneAndUpdate({_id: req.params.tripId}, req.body, {new: true}, function(err, trip) {
       if (err){
-        res.send(err);
-      }
+        if(err.name == 'ValidationError'){
+          res.status(422).send(err);
+        }else{
+          res.status(500).send(err)
+        }      }
       else{
         res.json(trip);
       }
@@ -83,8 +89,11 @@ exports.create_a_stage = function(req, res) {
   var new_stage = new Stage(req.body);
   new_stage.save(function(err, stage) {
     if (err){
-      res.send(err);
-    }
+      if(err.name == 'ValidationError'){
+        res.status(422).send(err);
+      }else{
+        res.status(500).send(err)
+      }    }
     else{
       res.json(stage);
     }
@@ -106,8 +115,11 @@ exports.read_a_stage = function(req, res) {
 exports.update_a_stage = function(req, res) {
   Stage.findOneAndUpdate({_id: req.params.stageId}, req.body, {new: true}, function(err, stage) {
     if (err){
-      res.send(err);
-    }
+      if(err.name == 'ValidationError'){
+        res.status(422).send(err);
+      }else{
+        res.status(500).send(err)
+      }    }
     else{
       res.json(stage);
   }

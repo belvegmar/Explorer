@@ -18,8 +18,11 @@ exports.create_an_sponsorShip = function(req, res) {
   var new_sponsorShip = new SponsorShip(req.body);
   new_sponsorShip.save(function(err, sponsorShip) {
     if (err){
-      res.send(err);
-    }
+      if(err.name == 'ValidationError'){
+        res.status(422).send(err);
+      }else{
+        res.status(500).send(err)
+      }    }
     else{
       res.json(sponsorShip);
     }
@@ -40,8 +43,11 @@ exports.read_an_sponsorShip = function(req, res) {
 exports.update_an_sponsorShip = function(req, res) {
     SponsorShip.findOneAndUpdate({_id: req.params.sponsorShipId}, req.body, {new: true}, function(err, sponsorShip) {
         if (err){
-            res.send(err);
-        }
+          if(err.name == 'ValidationError'){
+            res.status(422).send(err);
+          }else{
+            res.status(500).send(err)
+          }        }
         else{
             res.json(sponsorShip);
         }

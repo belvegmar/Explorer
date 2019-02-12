@@ -20,6 +20,8 @@ exports.create_an_actor = function(req, res) {
     if (err){
       if(err.name == 'ValidationError'){
         res.status(422).send(err);
+      }else{
+        res.status(500).send(err)
       }
     }
     else{
@@ -42,7 +44,11 @@ exports.read_an_actor = function(req, res) {
 exports.update_an_actor = function(req, res) {
     Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
         if (err){
-            res.send(err);
+          if(err.name=='ValidationError'){
+            res.status(422).send(err);
+          }else{
+            res.status(500).send(err);
+          }
         }
         else{
             res.json(actor);

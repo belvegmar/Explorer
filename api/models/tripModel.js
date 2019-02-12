@@ -25,7 +25,6 @@ var StageSchema = new Schema({
 var TripSchema = new Schema({
   ticker: {
     type: String,
-    required: 'Kindly enter the description'
   },
   title: {
     type: String,

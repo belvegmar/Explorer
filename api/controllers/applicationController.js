@@ -19,8 +19,11 @@ exports.create_an_application = function(req, res) {
   var new_application = new Application(req.body);
   new_application.save(function(err, application) {
     if (err){
-      res.send(err);
-    }
+      if(err.name == 'ValidationError'){
+        res.status(422).send(err);
+      }else{
+        res.status(500).send(err)
+      }    }
     else{
       res.json(application);
     }
@@ -41,8 +44,11 @@ exports.read_an_application = function(req, res) {
 exports.update_an_application = function(req, res) {
     Application.findOneAndUpdate({_id: req.params.applicationId}, req.body, {new: true}, function(err, application) {
         if (err){
-            res.send(err);
-        }
+          if(err.name == 'ValidationError'){
+            res.status(422).send(err);
+          }else{
+            res.status(500).send(err)
+          }        }
         else{
             res.json(application);
         }

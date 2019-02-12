@@ -7,8 +7,11 @@ var mongoose = require('mongoose'),
 exports.list_all_finders = function(req, res) {
   Finder.find(function(err, finders) {
     if (err){
-      res.send(err);
-    }
+      if(err.name == 'ValidationError'){
+        res.status(422).send(err);
+      }else{
+        res.status(500).send(err)
+      }    }
     else{
       res.json(finders);
     }
@@ -44,8 +47,11 @@ exports.read_a_finder = function(req, res) {
 exports.update_a_finder = function(req, res) {
     Finder.findOneAndUpdate({_id: req.params.finderId}, req.body, {new: true}, function(err, finder) {
       if (err){
-        res.send(err);
-      }
+        if(err.name == 'ValidationError'){
+          res.status(422).send(err);
+        }else{
+          res.status(500).send(err)
+        }      }
       else{
         res.json(finder);
       }
