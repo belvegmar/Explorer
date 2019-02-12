@@ -16,10 +16,13 @@ var SponsorShipSchema = new Schema({
     required: 'Kindly enter the flat Rate'
   },
   trip: {
-      type: Schema.Types.ObjectId,
-      ref: 'Trip'
-  },
-  strict: false });
+    type: Schema.Types.ObjectId,
+    ref: 'Trip'
+  }
+},
+  {
+    strict: false
+  });
 
 
 module.exports = mongoose.model('SponsorShips', SponsorShipSchema);

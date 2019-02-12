@@ -1,7 +1,7 @@
 'use strict';
 /*---------------SPONSOR SHIP----------------------*/
 var mongoose = require('mongoose'),
-  SponsorShip = mongoose.model('SponsorShip');
+  SponsorShip = mongoose.model('SponsorShips');
 
 exports.list_all_sponsorShips = function(req, res) {
     SponsorShip.find({}, function(err, sponsorShips) {

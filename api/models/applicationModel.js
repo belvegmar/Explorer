@@ -16,7 +16,12 @@ var ApplicationSchema = new Schema({
   rejectedReason: {
     type: String
   },
-  strict: false });
+  trip: {
+    type: Schema.Types.ObjectId,
+    ref: 'Trip'
+  }
+},
+  { strict: false });
 
 
 module.exports = mongoose.model('Applications', ApplicationSchema);
