@@ -67,3 +67,15 @@ exports.delete_an_application = function (req, res) {
     }
   });
 };
+
+
+exports.delete_all_applications = function (req, res) {
+  Application.remove({}, function (err, application) {
+    if (err) {
+      res.send(err);
+    }
+    else {
+      res.json({ message: 'Applications successfully deleted' });
+    }
+  });
+};

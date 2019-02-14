@@ -71,4 +71,16 @@ exports.delete_a_finder = function (req, res) {
   });
 };
 
+exports.delete_all_finders = function (req, res) {
+  Finder.remove({}, function (err, finder) {
+    if (err) {
+      res.send(err);
+    }
+    else {
+      res.json({ message: 'Finders successfully deleted' });
+    }
+  });
+};
+
+
 

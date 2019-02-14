@@ -69,6 +69,19 @@ exports.delete_a_trip = function(req, res) {
     });
 };
 
+exports.delete_all_trips = function(req, res) {
+  Trip.remove({}, function(err, trip) {
+      if (err){
+          res.send(err);
+      }
+      else{
+          res.json({ message: 'Trips successfully deleted' });
+      }
+  });
+};
+
+
+
 
 /*---------------STAGE----------------------*/
 var mongoose = require('mongoose'),
@@ -136,4 +149,18 @@ exports.delete_a_stage = function(req, res) {
     }
   });
 };
+
+exports.delete_all_stages = function(req, res) {
+  Stage.remove({}, function(err, stage) {
+    if (err){
+      res.send(err);
+    }
+    else{
+      res.json({ message: 'Stages successfully deleted' });
+    }
+  });
+};
+
+
+
 

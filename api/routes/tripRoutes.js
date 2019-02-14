@@ -3,18 +3,20 @@ module.exports = function (app) {
     var trips = require('../controllers/tripController');
     app.route('/trips')
         .get(trips.list_all_trips)
-        .post(trips.create_a_trip);
+        .post(trips.create_a_trip)
+        .delete(trips.delete_all_trips);
 
     app.route('/trips/:tripId')
         .get(trips.read_a_trip)
         .put(trips.update_a_trip)
         .delete(trips.delete_a_trip);
 
-        
+
     var stages = require('../controllers/tripController');
     app.route('/stages')
         .get(stages.list_all_stages)
-        .post(stages.create_a_stage);
+        .post(stages.create_a_stage)
+        .delete(stages.delete_all_stages);
 
     app.route('/stages/:stageId')
         .get(stages.read_a_stage)

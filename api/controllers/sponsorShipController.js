@@ -64,3 +64,16 @@ exports.delete_an_sponsorShip = function(req, res) {
         }
     });
 };
+
+exports.delete_all_sponsorShips = function(req, res) {
+  SponsorShip.remove({}, function(err, sponsorShip) {
+      if (err){
+          res.send(err);
+      }
+      else{
+          res.json({ message: 'SponsorShips successfully deleted' });
+      }
+  });
+};
+
+

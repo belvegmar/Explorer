@@ -9,7 +9,7 @@ var PriceRangeSchema = new Schema({
     },
     maxPrice: {
         type: Number,
-       // min: 0,
+        min: 0,
         validate:[priceValidator, 'Min price must be less than max price']
     }
 }, { strict: false });

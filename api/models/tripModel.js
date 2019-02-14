@@ -8,11 +8,11 @@ const dateFormat = require('dateFormat');
 var StageSchema = new Schema({
   title: {
     type: String,
-    required: 'Kindly enter the title of the Category'
+    required: 'Kindly enter the title of the stage'
   },
   description: {
     type: String,
-    required: 'Kindly enter the description of the Category'
+    required: 'Kindly enter the description of the stage'
   },
   price: {
     type: Number,
@@ -78,7 +78,6 @@ TripSchema.pre('save', function(callback){
   new_trip.ticker = [day, generate('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 4)].join('-')
   callback();
 });
-
 
 
 module.exports = mongoose.model('Stages', StageSchema);

@@ -13,11 +13,20 @@ var SponsorShipSchema = new Schema({
   },
   flatRate: {
     type: Number,
-    required: 'Kindly enter the flat Rate'
+    required: 'Kindly enter the flat Rate',
+    min: 0
   },
   trip: {
     type: Schema.Types.ObjectId,
     ref: 'Trip'
+  }, 
+  sponsor: {
+    type: Schema.Types.ObjectId,
+    ref: 'Actor'
+  },
+
+  isPaid: {
+    type: Boolean
   }
 },
   {
