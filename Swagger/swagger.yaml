@@ -1,0 +1,219 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: ACME-Explorer API
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /actors:
+    x-swagger-router-controller: actorController
+    
+## GET    
+    get:
+      description: get the actors list
+      operationId: list_all_actors
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetActorsListResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+## POST               
+    post:
+      description: add a new actor to the list
+      operationId: create_an_actor
+      parameters:
+        - in: body
+          name: name
+          description: The actor to create.
+          schema:
+            $ref: "#/definitions/Actor"
+      responses:
+        "201":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetActorsResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+    delete:
+        description: delete the actors list
+        operationId: delete_all_actors
+        responses:
+          "200":
+            description: Success
+            
+
+  /actors/{id}:
+    x-swagger-router-contoller: actorController
+    get: 
+      description: get an actor
+      operationId: read_an_actor
+      parameters:
+      - name: id
+        type: string
+        in: path
+        required: true
+      responses: 
+        "200":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+    put:
+      description: update an actor
+      operationId: update_an_actor
+      #define the parameters
+      parameters:
+        - name: id
+          description: actor id
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: actor
+          description: The actor to update
+          schema:
+            $ref: "#/definitions/Actor"
+      responses: 
+        "200":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+            
+    delete:
+      description: delete an actor
+      operationId: delete_an_actor
+      parameters:
+        - name: id
+          description: actor
+          type: string
+          in: path
+          required: true
+      responses: 
+        "200":
+          description: Success
+          
+
+            
+            
+            
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  Actor:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: id of the Actor
+      name:
+        type: string
+        description: Name of the Actor
+      surname:
+        type: string
+        description: Surname of the Actor
+      email:
+        type: string
+        description: Email of the Actor
+      phone:
+        type: string
+        description: Phone number of the Actor
+      address:
+        type: string
+        description: Address of the Actor
+      role:
+        type: string
+        enum: 
+          - ADMINISTRATOR
+          - EXPLORER
+          - SPONSOR
+          - MANAGER
+        description: Role of the Actor
+    required:
+      - name
+      - surname
+      - email
+  GetActorsResponse:
+    type: object
+    properties:
+      _id:
+        type: number
+        description: identifier
+      name:
+        type: string
+        description: Name of the Actor
+      surname:
+        type: string
+        description: Surname of the Actor
+      email:
+        type: string
+        description: Email of the Actor
+      phone:
+        type: string
+        description: Phone number of the Actor
+      address:
+        type: string
+        description: Address of the Actor
+      role:
+        type: string
+        enum: 
+          - ADMINISTRATOR
+          - EXPLORER
+          - SPONSOR
+          - MANAGER
+        description: Role of the Actor
+        
+        
+  GetActorsListResponse:
+    required:
+      - actors
+    properties:
+      actors:
+        type: array
+        items: 
+          $ref: "#/definitions/GetActorsResponse"
+        
+        
+
+  ErrorResponse:
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          
+          
+  GeneralResponse:
+    type: object
+    properties:
+      success:
+        type: number
+        description: returns 1 if successful
+      description:
+        type: string
+        description: a short comment
+    required:
+      - success
+      - description

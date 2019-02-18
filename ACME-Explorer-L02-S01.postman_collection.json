@@ -1,0 +1,1091 @@
+{
+	"info": {
+		"_postman_id": "4dcf0310-72d4-491f-8bd3-0811e65e9ce8",
+		"name": "ACME-Explorer-L02-S01",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ACTORS",
+			"item": [
+				{
+					"name": "POST ACTOR-EXPLORER",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ExplorerName\",\n\t\"surname\": \"ExplorerSurname\",\n\t\"email\": \"explorer@fakemail.com\",\n\t\"password\": \"asdfasdf\",\n\t\"phone\": \"+34612345678\",\n\t\"address\": \"address\",\n\t\"role\": \"EXPLORER\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/actors",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST ACTOR-MANAGER",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ManagerName\",\n\t\"surname\": \"ManagerSurname\",\n\t\"email\": \"manager@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345678\",\n\t\"address\": \"address\",\n\t\"role\": \"MANAGER\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/actors",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST ACTOR-ADMIN",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ManagerName\",\n\t\"surname\": \"ManagerSurname\",\n\t\"email\": \"manager@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345678\",\n\t\"address\": \"address\",\n\t\"role\": \"MANAGER\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/actors",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST ACTOR-SPONSOR",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ManagerName\",\n\t\"surname\": \"ManagerSurname\",\n\t\"email\": \"manager@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345678\",\n\t\"address\": \"address\",\n\t\"role\": \"MANAGER\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/actors",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL ACTORS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/actors/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET AN ACTOR",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "5c62f7e60fe30014b81c7111",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/actors/5c62f7e60fe30014b81c7111",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actors",
+								"5c62f7e60fe30014b81c7111"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT ACTOR",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ManagerName\",\n\t\"surname\": \"ManagerSurname\",\n\t\"email\": \"manager@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345678\",\n\t\"address\": \"address\",\n\t\"role\": \"MANAGER\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/actors/5c62f7e60fe30014b81c7111",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actors",
+								"5c62f7e60fe30014b81c7111"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE AN ACTOR",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/actors/5c62f7e60fe30014b81c7111",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actors",
+								"5c62f7e60fe30014b81c7111"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ALL ACTORS",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/actors/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actors",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TRIPS",
+			"item": [
+				{
+					"name": "DELETE A TRIP",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/trips/5c6571edb7f9450838f45b4d",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trips",
+								"5c6571edb7f9450838f45b4d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET A TRIP",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/trips/5c6571edb7f9450838f45b4d",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trips",
+								"5c6571edb7f9450838f45b4d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST TRIP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Interail 2019\",\n\t\"description\": \"Interail version 2.0 2019\",\n\t\"price\": 19.90,\n\t\"startDate\": \"2019-08-10\",\n\t\"endDate\": \"2019-09-10\",\n\t\"requirements\": [\"Barato\", \"Bonito\", \"Bueno\"],\n\t\"stages\": [{\n\t\t\"title\": \"Planificacion\", \"description\": \"Se procedera a planificar el viaje\", \"price\": 200},\n\t\t{\"title\": \"Ejecucion\", \"description\": \"Se procedera a realizar el viaje\", \"price\": 200}]\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/trips",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trips"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL TRIPS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/trips/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trips",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ALL TRIPS",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/trips/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trips",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT TRIP",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Interail 2019\",\n\t\"description\": \"Interail version 2.0 2019\",\n\t\"price\": 19.90,\n\t\"startDate\": \"2019-08-10\",\n\t\"endDate\": \"2019-07-10\",\n\t\"requirements\": [\"Barato\", \"Bonito\", \"Bueno\"],\n\t\"stages\": [{\n\t\t\"title\": \"Planificacion\", \"description\": \"Se procedera a planificar el viaje\", \"price\": 200},\n\t\t{\"title\": \"Ejecucion\", \"description\": \"Se procedera a realizar el viaje\", \"price\": 200}]\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/trips/5c631eab2b165342f0f7f3fa",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trips",
+								"5c631eab2b165342f0f7f3fa"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FINDERS",
+			"item": [
+				{
+					"name": "POST FINDER",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"keyWord\": \"caribe\",\n\t\"priceRange\": [{\"minPrice\": 330, \"maxPrice\": 100}],\n\t\"dateRange\": [{\"start\":\"2019-08-10\", \"end\":\"2019-09-10\"}]\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/finders",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"finders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL FINDERS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/finders/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"finders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ALL FINDERS",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/finders/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"finders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET A FINDER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/finders/5c6440b86b74d132dcd0dea2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"finders",
+								"5c6440b86b74d132dcd0dea2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT FINDER",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"keyWord\": \"caribe\",\n\t\"priceRange\": [{\"minPrice\": 330, \"maxPrice\": 100}],\n\t\"dateRange\": [{\"start\":\"2019-08-10\", \"end\":\"2019-09-10\"}]\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/finders/5c6440ae6b74d132dcd0de9f",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"finders",
+								"5c6440ae6b74d132dcd0de9f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE A FINDER Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/trips/5c6571edb7f9450838f45b4d",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trips",
+								"5c6571edb7f9450838f45b4d"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "APPLICATIONS",
+			"item": [
+				{
+					"name": "POST APPLICATION",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ManagerName\",\n\t\"surname\": \"ManagerSurname\",\n\t\"email\": \"manager@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345678\",\n\t\"address\": \"address\",\n\t\"role\": \"MANAGER\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/actors",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL APPLICATIONS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/sponsorships/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sponsorships",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET AN APPLICATION",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/sponsorships/5c644a50dfc8b7129cfe2c94",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sponsorships",
+								"5c644a50dfc8b7129cfe2c94"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT AN APPLICATION",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"banner\": \"Hola\",\n\t\"link\": \"http://www.elmejorviajedetuvida.com\",\n\t\"flatRate\": 34,\n\t\"trip\": \"5c631eab2b165342f0f7f3fa\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/sponsorships/5c644a50dfc8b7129cfe2c94",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sponsorships",
+								"5c644a50dfc8b7129cfe2c94"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ALL APPLICATIONS",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/finders/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"finders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE AN APPLICATION",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/applications/5c657502ecae4b2b1492223a",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"applications",
+								"5c657502ecae4b2b1492223a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SPONSORSHIPS",
+			"item": [
+				{
+					"name": "POST SPONSORSHIP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"banner\": \"Hola\",\n\t\"link\": \"http://www.elmejorviajedetuvida.com\",\n\t\"flatRate\": 22,\n\t\"trip\": \"5c631eab2b165342f0f7f3fa\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/sponsorships/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sponsorships",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL SPONSORSHIPS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/sponsorships/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sponsorships",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET A SPONSORSHIPS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/sponsorships/5c644a50dfc8b7129cfe2c94",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sponsorships",
+								"5c644a50dfc8b7129cfe2c94"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT SPONSORSHIP",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"banner\": \"Hola\",\n\t\"link\": \"http://www.elmejorviajedetuvida.com\",\n\t\"flatRate\": 34,\n\t\"trip\": \"5c631eab2b165342f0f7f3fa\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/sponsorships/5c644a50dfc8b7129cfe2c94",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sponsorships",
+								"5c644a50dfc8b7129cfe2c94"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE A SPONSORSHIP",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/applications/5c657502ecae4b2b1492223a",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"applications",
+								"5c657502ecae4b2b1492223a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ALL SPONSORSHIPS",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/finders/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"finders",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "STAGES",
+			"item": [
+				{
+					"name": "POST STAGES",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"banner\": \"Hola\",\n\t\"link\": \"http://www.elmejorviajedetuvida.com\",\n\t\"flatRate\": 22,\n\t\"trip\": \"5c631eab2b165342f0f7f3fa\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/stages/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stages",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL STAGES",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/sponsorships/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sponsorships",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET A STAGE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/sponsorships/5c644a50dfc8b7129cfe2c94",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sponsorships",
+								"5c644a50dfc8b7129cfe2c94"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT STAGE",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"banner\": \"Hola\",\n\t\"link\": \"http://www.elmejorviajedetuvida.com\",\n\t\"flatRate\": 34,\n\t\"trip\": \"5c631eab2b165342f0f7f3fa\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/sponsorships/5c644a50dfc8b7129cfe2c94",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sponsorships",
+								"5c644a50dfc8b7129cfe2c94"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE A STAGE",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/applications/5c657502ecae4b2b1492223a",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"applications",
+								"5c657502ecae4b2b1492223a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ALL STAGES",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/finders/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"finders",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
