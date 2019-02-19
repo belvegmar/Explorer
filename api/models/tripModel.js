@@ -1,6 +1,7 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var Actor = require('./actorModel')
 
 const generate = require('nanoid/generate');
 const dateFormat = require('dateFormat');
@@ -36,12 +37,11 @@ var TripSchema = new Schema({
   },
   price: {
     type: Number,
-    required: 'Kindly enter the item price',
     min: 0
   },
   startDate: {
-      type: Date,
-      required: 'Kindly enter the start date'
+    type: Date,
+    required: 'Kindly enter the start date'
   },
   requirements: [String],
   endDate: {
@@ -53,31 +53,76 @@ var TripSchema = new Schema({
     data: Buffer, contentType: String
   },
   isCancelled: {
-      type: Boolean
+    type: Boolean
+  },
+  manager: {
+    type: Schema.Types.ObjectId,
+    ref: 'Actors',
+    required: 'Kindly enter the manager'
   },
   cancelationReason: {
-      type: String
+    type: String
   },
   stages: [StageSchema]
-},  { strict: false });
+},
+  { strict: false });
 
 
 
-function dateValidator(value){
+function dateValidator(value) {
   return this.startDate <= value;
 }
 
 
 
-var day=dateFormat(new Date(), "yymmdd")
+var day = dateFormat(new Date(), "yymmdd")
 
-TripSchema.pre('save', function(callback){
-  var new_trip=this;
-  var date = new Date;
+TripSchema.pre('save', function (callback) {
+  var new_trip = this;
+  var price = 0;
+  var stages = new_trip.stages;
+  for (var i = 0; i < stages.length; i++) {
+    price = price + stages[i].price;
+  };
 
-  new_trip.ticker = [day, generate('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 4)].join('-')
+  new_trip.price = price;
   callback();
 });
+
+TripSchema.pre('save', function (callback) {
+  var new_trip = this;
+  var date = new Date;
+  new_trip.ticker = [day, generate('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 4)].join('-');
+  callback();
+});
+
+
+//validate if the MANAGER exists
+TripSchema.pre('validate', function (next) {
+  var trip = this;
+  var actor_id = trip.manager;
+  if (actor_id) {
+    Actor.findOne({ _id: actor_id }, function (err, result) {
+      if (err) {
+        return next(err);
+      }
+      if (!result) {
+        trip.invalidate('actor', `Manager id ${trip.manager} does not reference an existing Manager`, trip.manager);
+      }
+      if (result.role != "MANAGER") {
+        trip.invalidate('actor', `Actor id ${trip.manager} does not reference a Manager`, trip.manager);
+      }
+
+      return next();
+    });
+  }
+
+  else {
+    return next();
+  }
+});
+
+
 
 
 module.exports = mongoose.model('Stages', StageSchema);
