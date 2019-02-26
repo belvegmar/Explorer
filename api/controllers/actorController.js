@@ -77,3 +77,17 @@ exports.delete_all_actors = function(req, res) {
       }
   });
 };
+
+
+exports.validate_an_actor = function(req, res) {
+  //Check that the user is an Administrator and if not: res.status(403); "an access token is valid, but requires more privileges"
+  console.log("Validating an actor with id: "+req.params.actorId)
+  Actor.findOneAndUpdate({_id: req.params.actorId},  { $set: {"validated": "true" }}, {new: true}, function(err, actor) {
+    if (err){
+      res.status(500).send(err);
+    }
+    else{
+      res.json(actor);
+    }
+  });
+};

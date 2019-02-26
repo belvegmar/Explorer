@@ -89,9 +89,20 @@ TripSchema.pre('save', function (callback) {
   callback();
 });
 
+TripSchema.pre('findOneAndUpdate', function (next) {
+  var stages = this._update.stages;
+  var price = 0;
+  for (var i = 0; i < stages.length; i++) {
+    price = price + stages[i].price;
+  };
+
+  this.update({},{ $set:{price: price}});
+
+  next();
+});
+
 TripSchema.pre('save', function (callback) {
   var new_trip = this;
-  var date = new Date;
   new_trip.ticker = [day, generate('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 4)].join('-');
   callback();
 });
@@ -121,6 +132,60 @@ TripSchema.pre('validate', function (next) {
     return next();
   }
 });
+
+
+
+exports.search_trips = function(req, res) {
+  //In further version of the code we will:
+  //1.- control the authorization in order to include deleted trips in the results if the requester is an Administrator.
+  //2.- use indexes to search keywords in 'name', 'description' or 'sku'.
+  var query = {};
+  //Checking if itemName is null or not. If null, all items are returned.
+  query.name = req.query.tripName!=null ? req.query.tripName : /.*/;
+
+  if(req.query.categoryId){
+    query.category=req.query.categoryId;
+  }
+  
+  if(req.query.deleted){
+    query.deleted = req.query.deleted;
+  }
+
+  var skip=0;
+  if(req.query.startFrom){
+    skip = parseInt(req.query.startFrom);
+  }
+  var limit=0;
+  if(req.query.pageSize){
+    limit=parseInt(req.query.pageSize);
+  }
+
+  var sort="";
+  if(req.query.reverse=="true"){
+    sort="-";
+  }
+  if(req.query.sortedBy){
+    sort+=req.query.sortedBy;
+  }
+
+  console.log("Query: "+query+" Skip:" + skip+" Limit:" + limit+" Sort:" + sort);
+
+  Item.find(query)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .lean()
+      .exec(function(err, item){
+    console.log('Start searching items');
+    if (err){
+      res.send(err);
+    }
+    else{
+      res.json(item);
+    }
+    console.log('End searching items');
+  });
+};
 
 
 
