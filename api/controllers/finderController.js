@@ -4,7 +4,7 @@
 var mongoose = require('mongoose'),
   Finder = mongoose.model('Finders');
 
-exports.list_all_finders = function (req, res) {
+/*exports.list_all_finders = function (req, res) {
   Finder.find(function (err, finders) {
     if (err) {
       res.send(err);
@@ -13,7 +13,7 @@ exports.list_all_finders = function (req, res) {
       res.json(finders);
     }
   });
-};
+};*/
 
 
 exports.create_a_finder = function (req, res) {
@@ -34,7 +34,7 @@ exports.create_a_finder = function (req, res) {
 
 
 exports.read_a_finder = function (req, res) {
-  Finder.findById(req.params.finderId, function (err, finder) {
+  Finder.findById(req.params.actorID, function (err, finder) {
     if (err) {
       res.send(err);
     }
@@ -46,7 +46,7 @@ exports.read_a_finder = function (req, res) {
 
 
 exports.update_a_finder = function (req, res) {
-  Finder.findOneAndUpdate({ _id: req.params.finderId }, req.body, { new: true }, function (err, finder) {
+  Finder.findOneAndUpdate({ _id: req.params.actorId }, req.body, { new: true }, function (err, finder) {
     if (err) {
       if (err.name == 'ValidationError') {
         res.status(422).send(err);
@@ -60,7 +60,16 @@ exports.update_a_finder = function (req, res) {
   });
 };
 
-exports.delete_a_finder = function (req, res) {
+exports.search_trips = function(req,res){
+  //Search trips by te criteria in the finder
+};
+
+exports.display_dashboard = function(req, res){
+// Administrator
+
+};
+
+/*exports.delete_a_finder = function (req, res) {
   Finder.remove({ _id: req.params.finderId }, function (err, finder) {
     if (err) {
       res.send(err);
@@ -69,9 +78,9 @@ exports.delete_a_finder = function (req, res) {
       res.json({ message: 'Finder successfully deleted' });
     }
   });
-};
+};*/
 
-exports.delete_all_finders = function (req, res) {
+/*exports.delete_all_finders = function (req, res) {
   Finder.remove({}, function (err, finder) {
     if (err) {
       res.send(err);
@@ -80,7 +89,7 @@ exports.delete_all_finders = function (req, res) {
       res.json({ message: 'Finders successfully deleted' });
     }
   });
-};
+};*/
 
 
 
