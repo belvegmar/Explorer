@@ -53,7 +53,9 @@ var TripSchema = new Schema({
     data: Buffer, contentType: String
   },
   isCancelled: {
-    type: Boolean
+    type: Boolean,
+    default: false,
+    validate: [cancelledTripValidator, 'The trip is cancelled so there must be a reason why']
   },
   manager: {
     type: Schema.Types.ObjectId,
@@ -73,6 +75,14 @@ function dateValidator(value) {
   return this.startDate <= value;
 }
 
+//A trip may be cancelled, in which case the system must store the reason why
+function cancelledTripValidator(value){
+  if(value == true && this.cancelationReason == null){
+    return false;
+  }
+}
+
+
 
 
 var day = dateFormat(new Date(), "yymmdd")
@@ -90,6 +100,7 @@ TripSchema.pre('save', function (callback) {
 });
 
 TripSchema.pre('findOneAndUpdate', function (next) {
+  //The price is calcullated automatically by stages prices
   var stages = this._update.stages;
   var price = 0;
   for (var i = 0; i < stages.length; i++) {
@@ -186,6 +197,7 @@ exports.search_trips = function(req, res) {
     console.log('End searching items');
   });
 };
+
 
 
 

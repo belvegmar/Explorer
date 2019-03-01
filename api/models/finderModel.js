@@ -31,7 +31,11 @@ var FinderSchema = new Schema({
         required: 'Kindly enter the description'
     },
     priceRange: [PriceRangeSchema],
-    dateRange: [DateRangeSchema]
+    dateRange: [DateRangeSchema],
+    explorer: {
+        type: Schema.Types.ObjectId,
+        ref: 'Actor'
+    }
 }, { strict: false });
 
 
