@@ -46,16 +46,16 @@ module.exports = function (app) {
         .delete(trips.delete_a_trip);
 
 
-            /**
- * Cancel a trip 
- *     RequiredRole: MANAGER
+    /**
+* Cancel a trip 
+*     RequiredRole: MANAGER
 
- * @section trips
- * @type put 
- * @url /v1/trips/:tripId/cancel
+* @section trips
+* @type put 
+* @url /v1/trips/:tripId/cancel
 */
-app.route('/v1/trips/:tripId/cancel')
-    .put(trips.cancel_trip);
+    app.route('/v1/trips/:tripId/cancel')
+        .put(trips.cancel_trip);
 
     /**
 * Search trips by a key word contained in tickers, titles or descriptions
@@ -71,18 +71,30 @@ app.route('/v1/trips/:tripId/cancel')
         .get(trips.search_trips);
 
 
-/**
-* Display dashboard
-*    RequiredRoles: Administrator 
-*
-* @section trips
-* @type get
-* @url /v1/trips/dashboard
-* @param {string} manager
-*/
-    app.route('/v1/trips/dashboard')
-    .get(trips.display_dashboard);
+    /**
+    * Display dashboard of trips per manager
+    *    RequiredRoles: Administrator 
+    *
+    * @section trips
+    * @type get
+    * @url /v1/dashboard_trip
+    * @param {string} manager
+    */
+    app.route('/v1/dashboard_trip')
+        .get(trips.display_dashboard_trip_manager);
 
+
+    /**
+       * Display dashboard of price 
+       *    RequiredRoles: Administrator 
+       *
+       * @section trips
+       * @type get
+       * @url /v1/dashboard_price
+       * @param {string} manager
+       */
+    app.route('/v1/dashboard_price')
+        .get(trips.display_dashboard_price);
 
 
     // var stages = require('../controllers/tripController');

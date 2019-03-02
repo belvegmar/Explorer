@@ -145,58 +145,12 @@ TripSchema.pre('validate', function (next) {
 });
 
 
+// ######################################################################################
+//                                      INDEXES
+// ######################################################################################
+TripSchema.index({ ticker: 'text', title: 'text', description: 'text'},
+            {weights: {ticker:10, title:5, description:1}});
 
-exports.search_trips = function(req, res) {
-  //In further version of the code we will:
-  //1.- control the authorization in order to include deleted trips in the results if the requester is an Administrator.
-  //2.- use indexes to search keywords in 'name', 'description' or 'sku'.
-  var query = {};
-  //Checking if itemName is null or not. If null, all items are returned.
-  query.name = req.query.tripName!=null ? req.query.tripName : /.*/;
-
-  if(req.query.categoryId){
-    query.category=req.query.categoryId;
-  }
-  
-  if(req.query.deleted){
-    query.deleted = req.query.deleted;
-  }
-
-  var skip=0;
-  if(req.query.startFrom){
-    skip = parseInt(req.query.startFrom);
-  }
-  var limit=0;
-  if(req.query.pageSize){
-    limit=parseInt(req.query.pageSize);
-  }
-
-  var sort="";
-  if(req.query.reverse=="true"){
-    sort="-";
-  }
-  if(req.query.sortedBy){
-    sort+=req.query.sortedBy;
-  }
-
-  console.log("Query: "+query+" Skip:" + skip+" Limit:" + limit+" Sort:" + sort);
-
-  Item.find(query)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .lean()
-      .exec(function(err, item){
-    console.log('Start searching items');
-    if (err){
-      res.send(err);
-    }
-    else{
-      res.json(item);
-    }
-    console.log('End searching items');
-  });
-};
 
 
 

@@ -95,7 +95,7 @@ module.exports = function (app) {
   * @url /v1/applications/dashboard
   * @param {string} groupBy (trip or status)
   */
-   app.route('/v1/applications/dashboard')
+   app.route('/v1/dashboard_application')
       .get(applications.display_dashboard);
 
 }

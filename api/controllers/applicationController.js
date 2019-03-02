@@ -145,5 +145,35 @@ exports.cancel = function(req,res){
 exports.display_dashboard = function(req, res){
   //Administrator --> Dasboard of applications by trip if groupBy = trip
     //Administrator --> Dasboard of applications by status if groupBy = status
+    Application.aggregate([
+      {
+          $group: {
+              _id: "$trip",
+              appllications: { $sum: 1 }
+          }
+      }, {
+          $group: {
+              _id: null,
+              min: { $min: "$appllications" },
+              max: { $max: "$appllications" },
+              avg: { $avg: "$appllications" },
+              std: { $stdDevPop: "$appllications" }
+          }
+      },{
+      $project: {
+          _id: 0,
+          min_appllications: "$min" ,
+          max_appllications: "$max",
+          avg_appllications: "$avg",
+          std_appllications: "$std" 
+      }
+      }
+      ], function (err, result) {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+            res.json(result);
+        }
+      });
 
 };

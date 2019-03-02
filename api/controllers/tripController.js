@@ -17,16 +17,104 @@ exports.list_all_trips = function (req, res) {
 };
 
 exports.search_trips = function (req, res) {
-  // Check if the keyworkd param exists (keyword: req.query.keyword)
+  console.log("Ha entrado");
+  var query = {};
+  // Check if the keyworkd param exists (keyword: req.query.keyword). If null, all trips are returned
+  query.keyword = req.query.keyword != null ? req.query.keyword : /.*/;
+
 
   // Find trip by keyword contained in tickers, titles or descriptions
+  if (req.query.keyword) {
+    query.$text = { $search: req.query.keyword };
+  }
+
+
+
+
+  //console.log("Query: "+query+" Skip:" + skip+" Limit:" + limit+" Sort:" + sort);
+
+  Trip.find(query)
+    .exec(function (err, item) {
+      console.log('Start searching items');
+      if (err) {
+        res.send(err);
+      }
+      else {
+        res.json(item);
+      }
+      console.log('End searching items');
+    });
 };
 
-exports.display_dashboard = function(req, res){
+
+exports.display_dashboard_trip_manager = function (err, res) {
   // If there is a manager in the head, print dashboard for trips per manager
 
   // If there isnt manager, print dashboard for all trips
+
+  Trip.aggregate([
+    {
+      $group: {
+        _id: "$manager",
+        trips: { $sum: 1 }
+      }
+    }, {
+      $group: {
+        _id: null,
+        min: { $min: "$trips" },
+        max: { $max: "$trips" },
+        avg: { $avg: "$trips" },
+        std: { $stdDevPop: "$trips" }
+      }
+    }, {
+      $project: {
+        _id: 0,
+        min_trips: "$min",
+        max_trips: "$max",
+        avg_trips: "$avg",
+        std_trips: "$std"
+      }
+    }
+  ], function (err, result) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(result);
+    }
+  });
 };
+
+
+exports.display_dashboard_price = function (err, res) {
+  Trip.aggregate([
+    {
+      $group: {
+        _id: null,
+        min: { $min: "$price" },
+        max: { $max: "$price" },
+        avg: { $avg: "$price" },
+        std: { $stdDevPop: "$price" }
+      }
+    }, {
+      $project: {
+        min_price: "$min",
+        max_price: "$max",
+        avg_price: "$avg",
+        std_price: "$std"
+      }
+    }
+  ], function (err, result) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(result);
+    }
+  });
+
+};
+
+
+
 
 
 exports.create_a_trip = function (req, res) {
@@ -106,7 +194,7 @@ exports.cancel_trip = function (req, res) {
             res.send('No se puede cancelar porque hay solicitudes aceptadas para ese viaje');
           }
           else {
-            Trip.updateOne({ "_id": req.params.tripId }, {$set: {"isCancelled":"true"}}, function (err, trip) {
+            Trip.updateOne({ "_id": req.params.tripId }, { $set: { "isCancelled": "true" } }, function (err, trip) {
               if (err) {
                 if (err.name == 'ValidationError') {
                   res.status(422).send(err);
