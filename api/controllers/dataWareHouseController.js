@@ -57,23 +57,23 @@ function createDataWareHouseJob() {
     async.parallel([
       computeStatisticsTripsManager,
       computeStatisticsApplicationsTrips,
-      computeStatisticsPrice,
-      computeRatioApplicationsStatus,
-      computeAvgPriceFinders,
-      computeBottomKeyWords
+      computeStatisticsPrice//,
+      //computeRatioApplicationsStatus,
+      //computeAvgPriceFinders,
+      //computeBottomKeyWords
     ], function (err, results) {
       if (err) {
         console.log("Error computing datawarehouse: " + err);
       }
       else {
-        //console.log("Resultados obtenidos por las agregaciones: "+JSON.stringify(results));
+        console.log("Resultados obtenidos por las agregaciones: "+JSON.stringify(results));
         new_dataWareHouse.statisticsTripsManager = results[0];
         new_dataWareHouse.statisticsApplicationsTrips = results[1];
         new_dataWareHouse.statisticsPrice = results[2];
-        new_dataWareHouse.ratioApplicationsStatus = results[3];
-        new_dataWareHouse.avgPriceFinders = results[4];
-        new_dataWareHouse.bottomKeyWords = results[5];
-        new_dataWareHouse.rebuildPeriod = rebuildPeriod;
+        //new_dataWareHouse.ratioApplicationsStatus = results[3];
+        //new_dataWareHouse.avgPriceFinders = results[4];
+        //new_dataWareHouse.bottomKeyWords = results[5];
+        //new_dataWareHouse.rebuildPeriod = rebuildPeriod;
 
         new_dataWareHouse.save(function (err, datawarehouse) {
           if (err) {
