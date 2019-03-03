@@ -35,22 +35,13 @@ module.exports = function (app) {
      * 
      * @section finders
      * @type get
-     * @url /v1/finders/:actorId/search
+     * @url /v1/search_trips_finder
      */
-    app.route('/v1/finders/:actorId/search')
+    app.route('/v1/search_trips_finder')
         .get(finders.search_trips);
 
 
- /**
-* Display dashboard
-*    RequiredRoles: Administrator 
-*
-* @section finders
-* @type get
-* @url /v1/finders/dashboard
-*/
-app.route('/v1/finders/dashboard')
-.get(finders.display_dashboard);
+
 
 
 

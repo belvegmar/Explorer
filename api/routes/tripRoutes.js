@@ -65,9 +65,12 @@ module.exports = function (app) {
 * @section trips
 * @type get
 * @url /v1/trips/search
-* @param {string} keyword 
+* @param {string} startFrom
+* @param {string} pageSize
+* @param {string} reverse (true|false)
+* @param {string} keyword //in ticker, title or description
 */
-    app.route('/v1/trips/search')
+    app.route('/v1/search_trips')
         .get(trips.search_trips);
 
 

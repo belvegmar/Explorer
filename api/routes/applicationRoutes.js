@@ -61,8 +61,8 @@ module.exports = function (app) {
       * @type get
       * @url /v1/applications/:applicationId/search
      */
-   app.route('/v1/applications/:applicationId/search')
-      .put(applications.search_by_status);
+   app.route('/v1/search_application_by_status')
+      .get(applications.search_by_status);
 
    /**
   * Pay an application with status DUE

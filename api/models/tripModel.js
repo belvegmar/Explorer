@@ -1,7 +1,8 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Actor = require('./actorModel')
+var Actor = require('./actorModel');
+
 
 const generate = require('nanoid/generate');
 const dateFormat = require('dateFormat');
@@ -25,7 +26,7 @@ var StageSchema = new Schema({
 
 var TripSchema = new Schema({
   ticker: {
-    type: String,
+    type: String
   },
   title: {
     type: String,
@@ -148,11 +149,10 @@ TripSchema.pre('validate', function (next) {
 // ######################################################################################
 //                                      INDEXES
 // ######################################################################################
-TripSchema.index({ ticker: 'text', title: 'text', description: 'text'},
-            {weights: {ticker:10, title:5, description:1}});
 
-
-
+TripSchema.index({ ticker: 'text', title: 'text', description: 'text'}, {weights: {ticker:10, title:5, description:1}});
+TripSchema.index({ticker:1}, {unique:true});
+TripSchema.index({ price: 1, startDate: -1, endDate: 1 }); //1 ascending,  -1 descending
 
 
 

@@ -50,7 +50,7 @@ ApplicationSchema.pre('validate', function (next) {
   }
 });
 
-//If there is an actor id, validate if the ACTOR exists
+//If there is an actor id, validate if the ACTOR exists and it's an EXPLORER
 ApplicationSchema.pre('validate', function (next) {
   var application = this;
   var actor_id = application.explorer;
@@ -75,6 +75,10 @@ ApplicationSchema.pre('validate', function (next) {
   }
 });
 
+// ######################################################################################
+//                                      INDEXES
+// ######################################################################################
+ApplicationSchema.index({ explorer: 1, status: 'text' })
 
 
 module.exports = mongoose.model('Applications', ApplicationSchema);

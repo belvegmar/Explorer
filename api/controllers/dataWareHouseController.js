@@ -37,7 +37,7 @@ var CronTime = require('cron').CronTime;
 //'*/30 * * * * *' cada 30 segundos
 //'*/10 * * * * *' cada 10 segundos
 //'* * * * * *' cada segundo
-var rebuildPeriod = '*/10 * * * * *';  //El que se usará por defecto
+var rebuildPeriod = '0 0 * * * *';  //El que se usará por defecto
 var computeDataWareHouseJob;
 
 exports.rebuildPeriod = function (req, res) {
@@ -157,10 +157,7 @@ function computeStatisticsPrice(callback) {
       }
     }, {
       $project: {
-        min_price: "$min",
-        max_price: "$max",
-        avg_price: "$avg",
-        std_price: "$std"
+        _id:0
       }
     }
   ], function (err, res) {

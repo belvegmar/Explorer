@@ -16,33 +16,49 @@ exports.list_all_trips = function (req, res) {
   });
 };
 
+
+// RUTA --> /v1/trips/search?q="keyword"&reverse="false|true"&startFrom="valor"&pageSize="tam"
 exports.search_trips = function (req, res) {
-  console.log("Ha entrado");
   var query = {};
   // Check if the keyworkd param exists (keyword: req.query.keyword). If null, all trips are returned
-  query.keyword = req.query.keyword != null ? req.query.keyword : /.*/;
-
+  //query.keyword = req.query.keyword != null ? req.query.keyword : /.*/;
 
   // Find trip by keyword contained in tickers, titles or descriptions
-  if (req.query.keyword) {
-    query.$text = { $search: req.query.keyword };
+  if (req.query.q) {
+    query.$text = { $search: req.query.q };
   }
 
+  var skip = 0;
+  if (req.query.startFrom){
+    skip = parseInt(req.query.startFrom);
+  }
 
+  var limit = 0;
+  if (req.query.pageSize){
+    limit = parseInt(req.query.pageSize);
+  }
 
+  var sort="";
+  if (req.query.reverse =="true"){
+    sort="-";
+  }
 
-  //console.log("Query: "+query+" Skip:" + skip+" Limit:" + limit+" Sort:" + sort);
+  console.log("Query: "+query+" Skip:" + skip+" Limit:" + limit+" Sort:" + sort);
 
   Trip.find(query)
-    .exec(function (err, item) {
-      console.log('Start searching items');
+    .sort(sort)
+    .skip(skip)
+    .limit(limit)
+    .lean()
+    .exec(function (err, trips) {
+      console.log('Start searching trips');
       if (err) {
         res.send(err);
       }
       else {
-        res.json(item);
+        res.json(trips);
       }
-      console.log('End searching items');
+      console.log('End searching trips');
     });
 };
 
@@ -108,6 +124,7 @@ exports.delete_a_trip = function (req, res) {
 };
 
 exports.cancel_trip = function (req, res) {
+  // COMPROBAR QUE ES UN MANAGER
   Trip.findById(req.params.tripId, function (err, trip) {
     if (err) {
       res.status(404).send(err);

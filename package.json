@@ -16,6 +16,7 @@
     "dateformat": "^3.0.3",
     "express": "^4.16.4",
     "mongoose": "^5.4.11",
+    "mongoose-immutable": "0.0.2",
     "nanoid": "^2.0.1"
   }
 }

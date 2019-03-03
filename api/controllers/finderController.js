@@ -64,10 +64,6 @@ exports.search_trips = function(req,res){
   //Search trips by te criteria in the finder
 };
 
-exports.display_dashboard = function(req, res){
-// Administrator
-
-};
 
 /*exports.delete_a_finder = function (req, res) {
   Finder.remove({ _id: req.params.finderId }, function (err, finder) {
