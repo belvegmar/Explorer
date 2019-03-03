@@ -111,7 +111,8 @@ function computeStatisticsTripsManager(callback) {
       }
     }
   ], function (err, res) {
-    callback(err, res[0].computeStatisticsTripsManager)
+    //console.log("computeStatisticsTripsManager:     "+res[0].statisticsTripsManager);
+    callback(err, res[0])
   });
 };
 
@@ -140,7 +141,7 @@ function computeStatisticsApplicationsTrips(callback) {
       }
     }
   ], function (err, res) {
-    callback(err, res[0].statisticsApplicationsTrips)
+    callback(err, res[0])
   });
 };
 
@@ -163,7 +164,7 @@ function computeStatisticsPrice(callback) {
       }
     }
   ], function (err, res) {
-    callback(err, res[0].statisticsPrice)
+    callback(err, res[0])
   });
 };
 
