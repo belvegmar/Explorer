@@ -71,30 +71,7 @@ module.exports = function (app) {
         .get(trips.search_trips);
 
 
-    /**
-    * Display dashboard of trips per manager
-    *    RequiredRoles: Administrator 
-    *
-    * @section trips
-    * @type get
-    * @url /v1/dashboard_trip
-    * @param {string} manager
-    */
-    app.route('/v1/dashboard_trip')
-        .get(trips.display_dashboard_trip_manager);
 
-
-    /**
-       * Display dashboard of price 
-       *    RequiredRoles: Administrator 
-       *
-       * @section trips
-       * @type get
-       * @url /v1/dashboard_price
-       * @param {string} manager
-       */
-    app.route('/v1/dashboard_price')
-        .get(trips.display_dashboard_price);
 
 
     // var stages = require('../controllers/tripController');

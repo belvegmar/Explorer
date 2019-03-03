@@ -86,16 +86,6 @@ module.exports = function (app) {
    app.route('/v1/applications/:applicationId/cancel')
       .put(applications.cancel);
 
-   /**
-  * Display dashboard
-  *    RequiredRoles: Administrator 
-  *
-  * @section applications
-  * @type get
-  * @url /v1/applications/dashboard
-  * @param {string} groupBy (trip or status)
-  */
-   app.route('/v1/dashboard_application')
-      .get(applications.display_dashboard);
+
 
 }

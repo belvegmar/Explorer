@@ -7,6 +7,8 @@ var express = require('express'),
   Finder = require('./api/models/finderModel'),
   SponsorShip = require('./api/models/sponsorShipModel'),
   Trip = require('./api/models/tripModel'),
+  DataWareHouse = require('./api/models/dataWareHouseModel'),
+  DataWareHouseTools = require('./api/controllers/dataWareHouseController'),
   bodyParser = require('body-parser');
 
 // MongoDB URI building
@@ -40,6 +42,7 @@ var routesApplications = require('./api/routes/applicationRoutes');
 var routesFinders = require('./api/routes/finderRoutes');
 var routesSponsorShips = require('./api/routes/sponsorShipRoutes');
 var routesTrips = require('./api/routes/tripRoutes');
+var routesDataWareHouse = require('./api/routes/dataWareHouseRoutes');
 
 
 routesActors(app);
@@ -47,6 +50,9 @@ routesApplications(app);
 routesFinders(app);
 routesSponsorShips(app);
 routesTrips(app);
+routesDataWareHouse(app);
+
+DataWareHouseTools.createDataWareHouseJob();
 
 
 console.log("Connecting DB to: " + mongoDBURI);
