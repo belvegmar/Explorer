@@ -16,17 +16,52 @@ exports.list_all_trips = function (req, res) {
   });
 };
 
+
+// RUTA --> /v1/trips/search?q="keyword"&reverse="false|true"&startFrom="valor"&pageSize="tam"
 exports.search_trips = function (req, res) {
-  // Check if the keyworkd param exists (keyword: req.query.keyword)
+  var query = {};
+  // Check if the keyworkd param exists (keyword: req.query.keyword). If null, all trips are returned
+  //query.keyword = req.query.keyword != null ? req.query.keyword : /.*/;
 
   // Find trip by keyword contained in tickers, titles or descriptions
+  if (req.query.q) {
+    query.$text = { $search: req.query.q };
+  }
+
+  var skip = 0;
+  if (req.query.startFrom){
+    skip = parseInt(req.query.startFrom);
+  }
+
+  var limit = 0;
+  if (req.query.pageSize){
+    limit = parseInt(req.query.pageSize);
+  }
+
+  var sort="";
+  if (req.query.reverse =="true"){
+    sort="-";
+  }
+
+  console.log("Query: "+query+" Skip:" + skip+" Limit:" + limit+" Sort:" + sort);
+
+  Trip.find(query)
+    .sort(sort)
+    .skip(skip)
+    .limit(limit)
+    .lean()
+    .exec(function (err, trips) {
+      console.log('Start searching trips');
+      if (err) {
+        res.send(err);
+      }
+      else {
+        res.json(trips);
+      }
+      console.log('End searching trips');
+    });
 };
 
-exports.display_dashboard = function(req, res){
-  // If there is a manager in the head, print dashboard for trips per manager
-
-  // If there isnt manager, print dashboard for all trips
-};
 
 
 exports.create_a_trip = function (req, res) {
@@ -89,6 +124,7 @@ exports.delete_a_trip = function (req, res) {
 };
 
 exports.cancel_trip = function (req, res) {
+  // COMPROBAR QUE ES UN MANAGER
   Trip.findById(req.params.tripId, function (err, trip) {
     if (err) {
       res.status(404).send(err);
@@ -106,7 +142,7 @@ exports.cancel_trip = function (req, res) {
             res.send('No se puede cancelar porque hay solicitudes aceptadas para ese viaje');
           }
           else {
-            Trip.updateOne({ "_id": req.params.tripId }, {$set: {"isCancelled":"true"}}, function (err, trip) {
+            Trip.updateOne({ "_id": req.params.tripId }, { $set: { "isCancelled": "true" } }, function (err, trip) {
               if (err) {
                 if (err.name == 'ValidationError') {
                   res.status(422).send(err);

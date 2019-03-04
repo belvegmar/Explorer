@@ -61,8 +61,8 @@ module.exports = function (app) {
       * @type get
       * @url /v1/applications/:applicationId/search
      */
-   app.route('/v1/applications/:applicationId/search')
-      .put(applications.search_by_status);
+   app.route('/v1/search_application_by_status')
+      .get(applications.search_by_status);
 
    /**
   * Pay an application with status DUE
@@ -86,16 +86,6 @@ module.exports = function (app) {
    app.route('/v1/applications/:applicationId/cancel')
       .put(applications.cancel);
 
-   /**
-  * Display dashboard
-  *    RequiredRoles: Administrator 
-  *
-  * @section applications
-  * @type get
-  * @url /v1/applications/dashboard
-  * @param {string} groupBy (trip or status)
-  */
-   app.route('/v1/applications/dashboard')
-      .get(applications.display_dashboard);
+
 
 }

@@ -46,16 +46,16 @@ module.exports = function (app) {
         .delete(trips.delete_a_trip);
 
 
-            /**
- * Cancel a trip 
- *     RequiredRole: MANAGER
+    /**
+* Cancel a trip 
+*     RequiredRole: MANAGER
 
- * @section trips
- * @type put 
- * @url /v1/trips/:tripId/cancel
+* @section trips
+* @type put 
+* @url /v1/trips/:tripId/cancel
 */
-app.route('/v1/trips/:tripId/cancel')
-    .put(trips.cancel_trip);
+    app.route('/v1/trips/:tripId/cancel')
+        .put(trips.cancel_trip);
 
     /**
 * Search trips by a key word contained in tickers, titles or descriptions
@@ -65,23 +65,15 @@ app.route('/v1/trips/:tripId/cancel')
 * @section trips
 * @type get
 * @url /v1/trips/search
-* @param {string} keyword 
+* @param {string} startFrom
+* @param {string} pageSize
+* @param {string} reverse (true|false)
+* @param {string} keyword //in ticker, title or description
 */
-    app.route('/v1/trips/search')
+    app.route('/v1/search_trips')
         .get(trips.search_trips);
 
 
-/**
-* Display dashboard
-*    RequiredRoles: Administrator 
-*
-* @section trips
-* @type get
-* @url /v1/trips/dashboard
-* @param {string} manager
-*/
-    app.route('/v1/trips/dashboard')
-    .get(trips.display_dashboard);
 
 
 

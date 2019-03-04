@@ -9,11 +9,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.6.2",
     "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
+    "cron": "^1.6.0",
     "dateformat": "^3.0.3",
     "express": "^4.16.4",
     "mongoose": "^5.4.11",
+    "mongoose-immutable": "0.0.2",
     "nanoid": "^2.0.1"
   }
 }

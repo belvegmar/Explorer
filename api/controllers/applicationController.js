@@ -85,6 +85,7 @@ exports.change_status = function(req,res){
   //Change status of the application only if the actor is manager
   var applicationId = req.params.applicationId;
   var new_status = req.query.status;
+  var rejected_reason = req.query.rejected_reason;
   console.log(new_status);
 
   Application.find({_id: applicationId}, function(err, application){
@@ -97,10 +98,10 @@ exports.change_status = function(req,res){
         res.status(400).send({message: 'There is not anny application with this id'});
       }
       //MANAGER
-      var condition = (application[0].status == "PENDING" && new_status == "REJECTED") || 
+      var condition = (application[0].status == "PENDING" && new_status == "REJECTED" && rejected_reason!= null) || 
       (application[0].status == "PENDING" && new_status == "DUE");
       if(condition){
-        Application.findOneAndUpdate({_id: applicationId}, {status: req.query.status}, {new:true}, function(err, application){
+        Application.findOneAndUpdate({_id: applicationId}, {status: req.query.status, rejected_reason: req.query.rejected_reason}, {new:true}, function(err, application){
           if (err) {
             if (err.name == 'ValidationError') {
               res.status(422).send(err);
@@ -116,7 +117,7 @@ exports.change_status = function(req,res){
       
       else{
         console.log()
-        res.status(400).send({message: `Status of application can't be changed because old status is ${application[0].status} and the new status is ${new_status}`})
+        res.status(400).send({message: `Status of application can't be changed because old status is ${application[0].status} and the new status is ${new_status} and rejected reason is ${rejected_reason}`})
       }
     }
   })
@@ -126,8 +127,48 @@ exports.apply = function(req, res){
   //Explorer --> Apply for a trip published and not started or cancelled
 };
 
+// /orderedTrips/search?explorer="explorerId"&reverse="false|true"&startFrom="valor"&pageSize="tam"
 exports.search_by_status= function(req,res){
   //Explorer --> search applications mades by her or him grouped by status
+  var query = {};
+
+  if(req.query.explorer){
+    query.explorer = req.query.explorer;
+  }
+  
+  var skip = 0;
+  if (req.query.startFrom){
+    skip = parseInt(req.query.startFrom);
+  }
+
+  var limit = 0;
+  if (req.query.pageSize){
+    limit = parseInt(req.query.pageSize);
+  }
+
+  var sort="";
+  if (req.query.reverse =="true"){
+    sort="-";
+  }
+  sort = sort + "status";
+
+  console.log("Query: "+query+" Skip:" + skip+" Limit:" + limit+" Sort:" + sort);
+
+  Application.find(query)
+    .sort(sort)
+    .skip(skip)
+    .limit(limit)
+    .lean()
+    .exec(function (err, applications) {
+      console.log('Start searching applications');
+      if (err) {
+        res.send(err);
+      }
+      else {
+        res.json(applications);
+      }
+      console.log('End searching applications');
+    });
 };
 
 exports.pay = function(req,res){
@@ -139,11 +180,5 @@ exports.pay = function(req,res){
 };
 
 exports.cancel = function(req,res){
-
-};
-
-exports.display_dashboard = function(req, res){
-  //Administrator --> Dasboard of applications by trip if groupBy = trip
-    //Administrator --> Dasboard of applications by status if groupBy = status
 
 };
