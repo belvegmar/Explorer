@@ -58,7 +58,7 @@ function createDataWareHouseJob() {
       computeStatisticsTripsManager,
       computeStatisticsApplicationsTrips,
       computeStatisticsPrice,
-      //computeRatioApplicationsStatus,
+      computeRatioApplicationsStatus,
       computeAvgPriceFinders,
       computeBottomKeyWords
     ], function (err, results) {
@@ -70,9 +70,9 @@ function createDataWareHouseJob() {
         new_dataWareHouse.statisticsTripsManager = results[0];
         new_dataWareHouse.statisticsApplicationsTrips = results[1];
         new_dataWareHouse.statisticsPrice = results[2];
-        //new_dataWareHouse.ratioApplicationsStatus = results[3];
-        new_dataWareHouse.avgPriceFinders = results[3];
-        new_dataWareHouse.bottomKeyWords = results[4];
+        new_dataWareHouse.ratioApplicationsStatus = results[3];
+        new_dataWareHouse.avgPriceFinders = results[4];
+        new_dataWareHouse.bottomKeyWords = results[5];
         //new_dataWareHouse.rebuildPeriod = rebuildPeriod;
 
         new_dataWareHouse.save(function (err, datawarehouse) {
@@ -166,6 +166,31 @@ function computeStatisticsPrice(callback) {
 };
 
 
+function computeRatioApplicationsStatus(callback) {
+  Application.aggregate([
+    {
+      $facet: {
+        applications: [{ $group: { _id: null, numapp: { $sum: 1 } } }],
+        applicationsStatus: [{ $group: { _id: "$status", numappgroup: { $sum: 1 } } }]
+      }
+    },
+    {
+      $project: {
+        _id: 0, ratio: {
+          "$arrayToObject": {
+            "$map": {"input": "$applicationsStatus", "as": "status",
+             "in": {
+                "k": { $arrayElemAt: ["$$status._id", 0] },
+                "v": { $divide: ["$$status.numappgroup", { $arrayElemAt: ["$applications.numapp", 0] }] }
+              }
+            }
+          }
+        }
+      }
+    }], function (err, res) {
+      callback(err, res[0].ratio)
+    });
+};
 
 
 function computeAvgPriceFinders(callback) {
