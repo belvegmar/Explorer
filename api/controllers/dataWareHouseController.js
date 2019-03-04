@@ -58,7 +58,7 @@ function createDataWareHouseJob() {
       computeStatisticsTripsManager,
       computeStatisticsApplicationsTrips,
       computeStatisticsPrice,
-      computeRatioApplicationsStatus,
+      //computeRatioApplicationsStatus,
       computeAvgPriceFinders,
       computeBottomKeyWords
     ], function (err, results) {
@@ -70,9 +70,9 @@ function createDataWareHouseJob() {
         new_dataWareHouse.statisticsTripsManager = results[0];
         new_dataWareHouse.statisticsApplicationsTrips = results[1];
         new_dataWareHouse.statisticsPrice = results[2];
-        new_dataWareHouse.ratioApplicationsStatus = results[3];
-        new_dataWareHouse.avgPriceFinders = results[4];
-        new_dataWareHouse.bottomKeyWords = results[5];
+        //new_dataWareHouse.ratioApplicationsStatus = results[3];
+        new_dataWareHouse.avgPriceFinders = results[3];
+        new_dataWareHouse.bottomKeyWords = results[4];
         //new_dataWareHouse.rebuildPeriod = rebuildPeriod;
 
         new_dataWareHouse.save(function (err, datawarehouse) {
@@ -165,34 +165,7 @@ function computeStatisticsPrice(callback) {
   });
 };
 
-function computeAvgPriceFinders(callback) {
-  Application.aggregate([
-    {
-      $facet: {
-        applications: [{ $group: { _id: null, numTotalApplications: { $sum: 1 } } }],
-        applicationsPerStatus: [{ $group: { _id: "$status", numApplications: { $sum: 1 } } }]
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        ratio: {
-          "$arrayToObject": {
-            "$map": {
-              "input": "$applicationsPerStatus",
-              "as": "status",
-              "in": {
-                "k": { $arrayElemAt: ["$$status._id", 0] },
-                "v": { $divide: ["$$status.numApplications", { $arrayElemAt: ["$applications.numTotalApplications", 0] }] }
-              }
-            }
-          }
-        }
-      }
-    }], function (err, res) {
-      callback(err, res[0])
-    });
-};
+
 
 
 function computeAvgPriceFinders(callback) {
@@ -219,8 +192,11 @@ function computeBottomKeyWords(callback){
     { "$limit": 10 },
     { $project: { keyWord: "$_id", _id: 0, count: "$count" } }
   ], function (err, res) {
-    var res_ls = res.map(function (rankingObject) { return rankingObject.keyWord; });
-    callback(err, res_ls)
+    var keyWords = [];
+    for (var kw in res){
+      keyWords.push(res[kw]);
+    }
+    callback(err, keyWords)
   });
 };
 
