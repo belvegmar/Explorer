@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
   DataWareHouse = mongoose.model('DataWareHouse'),
   Trip = mongoose.model('Trips'),
   Application = mongoose.model('Applications');
+  Finder = mongoose.model('Finders');
 
 exports.list_all_indicators = function (req, res) {
   console.log('Requesting indicators');
@@ -37,7 +38,7 @@ var CronTime = require('cron').CronTime;
 //'*/30 * * * * *' cada 30 segundos
 //'*/10 * * * * *' cada 10 segundos
 //'* * * * * *' cada segundo
-var rebuildPeriod = '0 0 * * * *';  //El que se usará por defecto
+var rebuildPeriod = '*/5 * * * * *';  //El que se usará por defecto
 var computeDataWareHouseJob;
 
 exports.rebuildPeriod = function (req, res) {
@@ -188,7 +189,7 @@ function computeRatioApplicationsStatus(callback) {
         }
       }
     }], function (err, res) {
-      callback(err, res[0].ratio)
+      callback(err, [res[0].ratio.PENDING, res[0].ratio.REJECTED, res[0].ratio.DUE, res[0].ratio.ACCEPTED, res[0].ratio.CANCELLED]);
     });
 };
 

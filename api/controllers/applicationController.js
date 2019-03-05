@@ -171,14 +171,38 @@ exports.search_by_status= function(req,res){
     });
 };
 
-exports.pay = function(req,res){
-  //Explorer --> pay a trip with status "DUE"
+exports.pay_application = function(req,res){
+  //Check that the status is "DUE"
+  var applicationId = req.params.applicationId;
+  Application.find({_id: applicationId}, function(err, application){
+    if(err){
+      console.log(err);
+      res.status(500).send(err);
+    }
+    else{
+      if(application[0].status=="DUE"){
+        Application.findOneAndUpdate({_id: applicationId}, {status: "ACCEPTED", isPaid:true}, {new:true}, function(err, application){
+          if (err) {
+            if (err.name == 'ValidationError') {
+              res.status(422).send(err);
+            } else {
+              res.status(500).send(err)
+            }
+          }
+          else {
+            res.json(application);
+          }
+        });
+      }
+
+    }
+  })
+  
 };
 
-exports.pay = function(req,res){
-  //Explorer --> cancel an application with status PENDING or ACCEPTED
-};
 
 exports.cancel = function(req,res){
 
 };
+
+

@@ -87,5 +87,17 @@ module.exports = function (app) {
       .put(applications.cancel);
 
 
+   /**
+ * Pay an application
+ *    RequiredRole: Explorer  
+ *    Status --> "DUE"
+ * @section applications
+ * @type put
+ * @url /v1/applications/:applicationId/payment
+*/
+app.route('/v1/applications/:applicationId/payment')
+.put(applications.pay_application);
+
+
 
 }
