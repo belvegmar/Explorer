@@ -18,6 +18,10 @@ var ApplicationSchema = new Schema({
   rejectedReason: {
     type: String
   },
+  isPaid: {
+    type: Boolean,
+    default:false
+  },
   trip: {
     type: Schema.Types.ObjectId,
     ref: 'Trips'
