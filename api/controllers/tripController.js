@@ -97,18 +97,26 @@ exports.read_a_trip = function (req, res) {
 
 exports.update_a_trip = function (req, res) {
   //Only if the actor is a Manager and the trip status is NOT PUBLISHED
-  Trip.findOneAndUpdate({ _id: req.params.tripId }, req.body, { new: true }, function (err, trip) {
-    if (err) {
-      if (err.name == 'ValidationError') {
-        res.status(422).send(err);
-      } else {
-        res.status(500).send(err)
+  console.log(JSON.stringify(req.body));
+  var ticker = req.body.ticker;
+  if(ticker!=null){
+    res.sendStatus(409);
+    return;    
+  }else{
+    Trip.findOneAndUpdate({ _id: req.params.tripId }, req.body, { new: true }, function (err, trip) {
+      if (err) {
+        if (err.name == 'ValidationError') {
+          res.status(422).send(err);
+        } else {
+          res.status(500).send(err)
+        }
       }
-    }
-    else {
-      res.json(trip);
-    }
-  });
+      else {
+        res.json(trip);
+      }
+    });
+  }
+  
 };
 
 exports.delete_a_trip = function (req, res) {

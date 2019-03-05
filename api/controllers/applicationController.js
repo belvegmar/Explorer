@@ -180,6 +180,7 @@ exports.pay_application = function(req,res){
       res.status(500).send(err);
     }
     else{
+      console.log(application[0].status);
       if(application[0].status=="DUE"){
         Application.findOneAndUpdate({_id: applicationId}, {status: "ACCEPTED", isPaid:true}, {new:true}, function(err, application){
           if (err) {
@@ -193,6 +194,9 @@ exports.pay_application = function(req,res){
             res.json(application);
           }
         });
+      }
+      else {
+        res.status(400).send({message: `Can't pay an application because the status is  ${application[0].status} and is not DUE`})
       }
 
     }
