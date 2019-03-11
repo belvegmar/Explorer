@@ -38,7 +38,7 @@ var CronTime = require('cron').CronTime;
 //'*/30 * * * * *' cada 30 segundos
 //'*/10 * * * * *' cada 10 segundos
 //'* * * * * *' cada segundo
-var rebuildPeriod = '0 0 * * * *';  //El que se usará por defecto
+var rebuildPeriod = '*/5 * * * * *';  //El que se usará por defecto
 var computeDataWareHouseJob;
 
 exports.rebuildPeriod = function (req, res) {
@@ -74,7 +74,7 @@ function createDataWareHouseJob() {
         new_dataWareHouse.ratioApplicationsStatus = results[3];
         new_dataWareHouse.avgPriceFinders = results[4];
         new_dataWareHouse.bottomKeyWords = results[5];
-        //new_dataWareHouse.rebuildPeriod = rebuildPeriod;
+        new_dataWareHouse.rebuildPeriod = rebuildPeriod;
 
         new_dataWareHouse.save(function (err, datawarehouse) {
           if (err) {
@@ -190,6 +190,7 @@ function computeRatioApplicationsStatus(callback) {
       }
     }], function (err, res) {
       callback(err, [res[0].ratio.PENDING, res[0].ratio.REJECTED, res[0].ratio.DUE, res[0].ratio.ACCEPTED, res[0].ratio.CANCELLED]);
+
     });
 };
 
