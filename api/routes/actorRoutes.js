@@ -1,6 +1,7 @@
 'use strict';
 module.exports = function (app) {
   var actors = require('../controllers/actorController');
+  var authController = require('../controllers/authController');
 
   /**
  * Get actors 
@@ -47,5 +48,22 @@ module.exports = function (app) {
  */
 app.route('/v1/actors/:actorId/banned')
 .put(actors.change_banned_status);
+
+
+  /**
+   * Put an actor
+   *    RequiredRoles: to be the proper actor
+   * Get an actor
+   *    RequiredRoles: any
+	 *
+	 * @section actors
+	 * @type get put
+	 * @url /v2/actors/:actorId
+  */  
+ app.route('/v2/actors/:actorId')
+ .get(actors.read_an_actor)
+ .put(authController.verifyUser(["ADMINISTRATOR","EXPLORER","MANAGER","SPONSOR"]),actors.update_an_actor_v2) 
 };
 
+
+     

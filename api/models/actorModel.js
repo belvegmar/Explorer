@@ -41,13 +41,12 @@ var ActorSchema = new Schema({
     required: 'Kindly enter the user role(s)',
     enum: ['EXPLORER', 'MANAGER', 'SPONSOR', 'ADMINISTRATOR']
   }],
-  validated: {
-    type: Boolean,
-    default: false
-  },
   banned: {
     type: Boolean,
     default: false
+  },
+  customToken: {
+    type: String
   },
   created: {
     type: Date,
