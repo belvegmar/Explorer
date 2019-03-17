@@ -15,7 +15,7 @@ var ActorSchema = new Schema({
   email: {
     type: String,
     match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address'],
-    unique: true,
+  //  unique: true,
     required: 'Kindly enter the actor email'
   },
   password: {
@@ -86,6 +86,5 @@ ActorSchema.methods.verifyPassword = function (password, cb) {
 // ######################################################################################
 //                                      INDEXES
 // ######################################################################################
-ActorSchema.index({ email: 1}, {unique: true});
 
 module.exports = mongoose.model('Actors', ActorSchema);
