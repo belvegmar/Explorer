@@ -61,7 +61,7 @@ exports.read_an_actor = function (req, res) {
 exports.update_an_actor = function (req, res) {
   //The actor must be the proper actor
   console.log(Date() + ": " + "PUT /v1/actors/:" + req.params.actorId);
-  Actor.findOneAndUpdate({ _id: req.params.actorId }, req.body, { new: true }, function (err, actor) {
+  Actor.findOneAndUpdate({ _id: req.params.actorId }, req.body, { new: true, runValidators:true }, function (err, actor) {
     if (err) {
       if (err.name == 'ValidationError') {
         res.status(422).send(err);
@@ -89,7 +89,21 @@ exports.delete_an_actor = function (req, res) {
 };
 
 exports.change_banned_status = function(req,res){
-  //Only Administrator
+  var banned_status = req.query.ban_status;
+  Actor.findOneAndUpdate({ _id: req.params.actorId }, {$set: {"banned": banned_status}}, { new: true, runValidators:true }, function (err, actor) {
+    if (err) {
+      if (err.name == 'ValidationError') {
+        res.status(422).send(err);
+      } else {
+        console.log(Date() + ": " + err);
+        res.status(500).send(err);
+      }
+    }
+    else {
+      console.log(Date() + ": " + "Actor with email:" + actor.email + "banned. ");
+      res.status(200).json(actor);
+    }
+  });
 };
 
 exports.delete_all_actors = function (req, res) {
@@ -103,19 +117,6 @@ exports.delete_all_actors = function (req, res) {
   });
 };
 
-
-exports.validate_an_actor = function (req, res) {
-  //Check that the user is an Administrator and if not: res.status(403); "an access token is valid, but requires more privileges"
-  console.log("Validating an actor with id: " + req.params.actorId)
-  Actor.findOneAndUpdate({ _id: req.params.actorId }, { $set: { "validated": "true" } }, { new: true }, function (err, actor) {
-    if (err) {
-      res.status(500).send(err);
-    }
-    else {
-      res.json(actor);
-    }
-  });
-};
 
 exports.login_an_actor = async function(req, res) {
   console.log('starting login an actor');

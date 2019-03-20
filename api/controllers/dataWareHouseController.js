@@ -112,7 +112,6 @@ function computeStatisticsTripsManager(callback) {
       }
     }
   ], function (err, res) {
-    //console.log("computeStatisticsTripsManager:     "+res[0].statisticsTripsManager);
     callback(err, res[0])
   });
 };

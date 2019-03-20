@@ -24,26 +24,26 @@ exports.search_trips = function (req, res) {
   //query.keyword = req.query.keyword != null ? req.query.keyword : /.*/;
 
   // Find trip by keyword contained in tickers, titles or descriptions
-  if (req.query.q) {
-    query.$text = { $search: req.query.q };
+  if (req.query.keyword) {
+    query.$text = { $search: req.query.keyword };
   }
 
   var skip = 0;
-  if (req.query.startFrom){
+  if (req.query.startFrom) {
     skip = parseInt(req.query.startFrom);
   }
 
   var limit = 0;
-  if (req.query.pageSize){
+  if (req.query.pageSize) {
     limit = parseInt(req.query.pageSize);
   }
 
-  var sort="";
-  if (req.query.reverse =="true"){
-    sort="-";
+  var sort = "";
+  if (req.query.reverse == "true") {
+    sort = "-";
   }
 
-  console.log("Query: "+query+" Skip:" + skip+" Limit:" + limit+" Sort:" + sort);
+  console.log("Query: " + query + " Skip:" + skip + " Limit:" + limit + " Sort:" + sort);
 
   Trip.find(query)
     .sort(sort)
@@ -65,6 +65,22 @@ exports.search_trips = function (req, res) {
 
 
 exports.create_a_trip = function (req, res) {
+  var new_trip = new Trip(req.body);
+  new_trip.save(function (err, trip) {
+    if (err) {
+      if (err.name == 'ValidationError') {
+        res.status(422).send(err);
+      } else {
+        res.status(500).send(err)
+      }
+    }
+    else {
+      res.json(trip);
+    }
+  });
+};
+
+exports.create_a_trip_v2 = function (req, res) {
   //Only if the actor is a Manager
   var new_trip = new Trip(req.body);
   new_trip.save(function (err, trip) {
@@ -83,6 +99,17 @@ exports.create_a_trip = function (req, res) {
 
 
 exports.read_a_trip = function (req, res) {
+  Trip.findById(req.params.tripId, function (err, trip) {
+    if (err) {
+      res.send(err);
+    }
+    else {
+      res.json(trip);
+    }
+  });
+};
+
+exports.read_a_trip_v2 = function (req, res) {
   //Only if the actor is a Manager 
   Trip.findById(req.params.tripId, function (err, trip) {
     if (err) {
@@ -96,14 +123,44 @@ exports.read_a_trip = function (req, res) {
 
 
 exports.update_a_trip = function (req, res) {
+  //Only if the trip status is NOT PUBLISHED
+  var id = req.params.tripId;
+
+  Trip.findById(id, function (err, trip) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      //Comprobar que el estado es no published
+      if (trip.isPublished) {
+        return res.status(500).send("Trip cacnnot be modified because it is published");
+      } else {
+        Trip.findByIdAndUpdate(id , req.body, { new: true, runValidators: true }, function (err, trip_np) {
+          if (err) {
+            console.log(err);
+            if (err.name == 'ValidationError') {
+              res.status(422).send(err);
+            } else {
+              res.status(500).send(err)
+            }
+          }
+          else {
+            res.json(trip_np);
+          }
+        });
+      }
+    }
+  });
+};
+
+exports.update_a_trip_v2 = function (req, res) {
   //Only if the actor is a Manager and the trip status is NOT PUBLISHED
   console.log(JSON.stringify(req.body));
   var ticker = req.body.ticker;
-  if(ticker!=null){
+  if (ticker != null) {
     res.sendStatus(409);
-    return;    
-  }else{
-    Trip.findOneAndUpdate({ _id: req.params.tripId }, req.body, { new: true }, function (err, trip) {
+    return;
+  } else {
+    Trip.findOneAndUpdate({ _id: req.params.tripId }, req.body, { new: true, runValidators: true }, function (err, trip) {
       if (err) {
         if (err.name == 'ValidationError') {
           res.status(422).send(err);
@@ -116,10 +173,22 @@ exports.update_a_trip = function (req, res) {
       }
     });
   }
-  
+
 };
 
 exports.delete_a_trip = function (req, res) {
+  //Only if the trip status is NOT PUBLISHED
+  Trip.remove({ _id: req.params.tripId }, function (err, trip) {
+    if (err) {
+      res.send(err);
+    }
+    else {
+      res.json({ message: 'Trip successfully deleted' });
+    }
+  });
+};
+
+exports.delete_a_trip_v2 = function (req, res) {
   //Only if the actor is a Manager and the trip status is NOT PUBLISHED
   Trip.remove({ _id: req.params.tripId }, function (err, trip) {
     if (err) {

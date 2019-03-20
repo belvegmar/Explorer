@@ -33,6 +33,8 @@ var ApplicationSchema = new Schema({
 },
   { strict: false });
 
+
+
 //If there is a trip id, validate if the TRIP exists
 ApplicationSchema.pre('validate', function (next) {
   var application = this;

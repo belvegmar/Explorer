@@ -83,9 +83,4 @@ ActorSchema.methods.verifyPassword = function (password, cb) {
 };
 
 
-// ######################################################################################
-//                                      INDEXES
-// ######################################################################################
-ActorSchema.index({ email: 1}, {unique: true});
-
 module.exports = mongoose.model('Actors', ActorSchema);

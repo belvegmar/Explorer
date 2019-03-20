@@ -26,7 +26,8 @@ var StageSchema = new Schema({
 
 var TripSchema = new Schema({
   ticker: {
-    type: String
+    type: String,
+    unique: true
   },
   title: {
     type: String,
@@ -57,6 +58,10 @@ var TripSchema = new Schema({
     type: Boolean,
     default: false,
     validate: [cancelledTripValidator, 'The trip is cancelled so there must be a reason why']
+  },
+  isPublished: {
+    type: Boolean,
+    default: false
   },
   manager: {
     type: Schema.Types.ObjectId,
@@ -102,6 +107,9 @@ TripSchema.pre('save', function (callback) {
 
 TripSchema.pre('findOneAndUpdate', function (next) {
   //The price is calcullated automatically by stages prices
+  if(!this._update.stages){
+    return next();
+  }
   var stages = this._update.stages;
   var price = 0;
   for (var i = 0; i < stages.length; i++) {
@@ -131,10 +139,12 @@ TripSchema.pre('validate', function (next) {
       }
       if (!result) {
         trip.invalidate('actor', `Manager id ${trip.manager} does not reference an existing Manager`, trip.manager);
+      }else{
+        if (result.role != "MANAGER") {
+          trip.invalidate('actor', `Actor id ${trip.manager} does not reference a Manager`, trip.manager);
+        }
       }
-      if (result.role != "MANAGER") {
-        trip.invalidate('actor', `Actor id ${trip.manager} does not reference a Manager`, trip.manager);
-      }
+      
 
       return next();
     });
@@ -146,12 +156,21 @@ TripSchema.pre('validate', function (next) {
 });
 
 
+//TICKERS CAN'T BE MODIFIED
+TripSchema.pre('findOneAndUpdate', function(next){
+  if(this._update.ticker){
+    delete this._update.ticker;
+  }
+  next();
+});
+
+
+
 // ######################################################################################
 //                                      INDEXES
 // ######################################################################################
 
 TripSchema.index({ ticker: 'text', title: 'text', description: 'text'}, {weights: {ticker:10, title:5, description:1}});
-TripSchema.index({ticker:1}, {unique:true});
 TripSchema.index({ price: 1, startDate: -1, endDate: 1 }); //1 ascending,  -1 descending
 
 
