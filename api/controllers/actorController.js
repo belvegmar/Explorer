@@ -7,7 +7,7 @@ var admin = require('firebase-admin');
 var authController = require('./authController');
 
 exports.list_all_actors = function (req, res) {
-  // The actor must be administrator
+  // If authentication version, the actor must be administrator
   Actor.find({}, function (err, actors) {
     if (err) {
       res.send(err);
@@ -17,6 +17,7 @@ exports.list_all_actors = function (req, res) {
     }
   });
 };
+
 
 exports.create_an_actor = function (req, res) {
   //Actor can be only created if the user is not registered in the system
@@ -38,8 +39,8 @@ exports.create_an_actor = function (req, res) {
   });
 };
 
+
 exports.read_an_actor = function (req, res) {
-  // The actor must be administrator or the proper actor
   console.log(Date() + ": " + "GET /v1/actors/:actorId");
   Actor.findById(req.params.actorId, function (err, actor) {
     if (err) {
@@ -57,6 +58,51 @@ exports.read_an_actor = function (req, res) {
     }
   });
 };
+
+exports.read_an_actor_v2 = function (req, res) {
+    // The actor must be administrator or the proper actor
+  Actor.findById(req.params.actorId, async function (err, actor) {
+    if (err) {
+      res.status(500).send(err);
+
+    }
+    else {
+      console.log('actor: '+actor);
+      var idToken = req.headers['idtoken'];//WE NEED the FireBase custom token in the req.header['idToken']... it is created by FireBase!!
+      if (actor.role.includes('MANAGER') || actor.role.includes('EXPLORER')|| actor.role.includes('SPONSOR')){
+        var authenticatedUserId = await authController.getUserId(idToken);
+        if (authenticatedUserId == req.params.actorId){
+          Actor.findById(req.params.actorId,  function(err, actor) {
+            if (err){
+              res.send(err);
+            }
+            else{
+              res.json(actor);
+            }
+          });
+        } else{
+          res.status(403); //Auth error
+          res.send('The Actor is trying to read an Actor that is not himself!');
+        }    
+      } else if (actor.role.includes('ADMINISTRATOR')){
+          Actor.findById(req.params.actorId, function(err, actor) {
+            if (err){
+              res.send(err);
+            }
+            else{
+              res.json(actor);
+            }
+          });
+      } else {
+        res.status(405); //Not allowed
+        res.send('The Actor has unidentified roles');
+      }
+    }
+  });
+};
+
+
+
 
 exports.update_an_actor = function (req, res) {
   //The actor must be the proper actor
@@ -78,6 +124,7 @@ exports.update_an_actor = function (req, res) {
 };
 
 exports.delete_an_actor = function (req, res) {
+  //If authentication version, the actor must be an ADMINISTRATOR
   Actor.remove({ _id: req.params.actorId }, function (err, actor) {
     if (err) {
       res.send(err);
@@ -88,7 +135,9 @@ exports.delete_an_actor = function (req, res) {
   });
 };
 
+
 exports.change_banned_status = function(req,res){
+  //If authentication version, the actor must be an ADMINISTRATOR
   var banned_status = req.query.ban_status;
   Actor.findOneAndUpdate({ _id: req.params.actorId }, {$set: {"banned": banned_status}}, { new: true, runValidators:true }, function (err, actor) {
     if (err) {
@@ -107,6 +156,7 @@ exports.change_banned_status = function(req,res){
 };
 
 exports.delete_all_actors = function (req, res) {
+  //If authentication version, the actor must be an ADMINISTRATOR
   Actor.remove({}, function (err, actor) {
     if (err) {
       res.send(err);
@@ -116,6 +166,7 @@ exports.delete_all_actors = function (req, res) {
     }
   });
 };
+
 
 
 exports.login_an_actor = async function(req, res) {
