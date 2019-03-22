@@ -1,6 +1,9 @@
 'use strict';
 module.exports = function (app) {
     var trips = require('../controllers/tripController');
+    var authController = require('../controllers/authController');
+
+ 
 
 
   /* ####################################################################################################################
@@ -12,13 +15,14 @@ module.exports = function (app) {
    /**
  * Manage catalogue of trips: 
  * Post trips
- *    RequiredRoles: none 
- *    
+ *    RequiredRoles: none     
  * Get trips 
  *    RequiredRoles: none
+ * Delete all trips
+ *    RequiredRoles:none  
 
  * @section trips
- * @type post get  
+ * @type post get delete
  * @url /v1/trips
 */
 app.route('/v1/trips')
@@ -47,11 +51,7 @@ app.route('/v1/trips/search')
 * Manage individual trips: 
 * Put a trip or update it
 *    RequiredRoles: none
-*      tripStatus --> NOT PUBLISHED
-*    RequiredRoles: none
-*       Can cancel a trip if it is published but has not started and not have accepted applications
-*
-* 
+*    tripStatus --> NOT PUBLISHED
 * Delete a trip
 *    RequiredRoles: none
 *    tripStatus --> NOT PUBLISHED
@@ -72,6 +72,9 @@ app.route('/v1/trips/:tripId')
 /**
 * Cancel a trip 
 *     RequiredRole: none
+      isPublished:true
+      not started
+      does not have any accepted applications
 
 * @section trips
 * @type put 
@@ -89,48 +92,47 @@ app.route('/v1/trips/:tripId/cancel')
      ####################################################################################################################
 */
 
-//     /**
-//  * Manage catalogue of trips: 
-//  * Post trips
-//  *    RequiredRoles: Manager 
-//  *    
-//  * Get trips 
-//  *    RequiredRoles: any
+    /**
+ * Manage catalogue of trips: 
+ * Post trips
+ *    RequiredRoles: MANAGER    
+ * Get trips 
+ *    RequiredRoles: MANAGER
+ * Delete trips
+ *    RequiredRoles: MANAGER
 
-//  * @section trips
-//  * @type post get  
-//  * @url /v1/trips
-// */
-//     app.route('/v1/trips')
-//         .get(trips.list_all_trips)
-//         .post(trips.create_a_trip)
-//         .delete(trips.delete_all_trips)
+ * @section trips
+ * @type post get  
+ * @url /v2/trips
+*/
+    app.route('/v2/trips')
+        .get(authController.verifyUser(["MANAGER"]), trips.list_all_trips)
+        .post(authController.verifyUser(["MANAGER"]), trips.create_a_trip)
+        .delete(authController.verifyUser(["MANAGER"]),trips.delete_all_trips)
 
 
-//     /**
-//  * Manage individual trips: 
-//  * Put a trip or update it
-//  *    RequiredRoles: Manager
-//  *      tripStatus --> NOT PUBLISHED
-//  *    RequiredRoles: Explorer
-//  *       Can cancel a trip if it is published but has not started and not have accepted applications
-//  *
-//  * 
-//  * Delete a trip
-//  *    RequiredRoles: Manager
-//  *    tripStatus --> NOT PUBLISHED
-//  * 
-//  * Get a trip
-//  *    RequiredRoles: Manager
+    /**
+ * Manage individual trips: 
+ * Put a trip or update it
+ *    RequiredRoles: Manager
+ *      tripStatus --> NOT PUBLISHED
+ *
+ * 
+ * Delete a trip
+ *    RequiredRoles: Manager
+ *    tripStatus --> NOT PUBLISHED
+ * 
+ * Get a trip
+ *    RequiredRoles: Manager
 
-//  * @section trips
-//  * @type get put delete 
-//  * @url /v1/trips/:tripId
-// */
-//     app.route('/v1/trips/:tripId')
-//         .get(trips.read_a_trip)
-//         .put(trips.update_a_trip)
-//         .delete(trips.delete_a_trip);
+ * @section trips
+ * @type get put delete 
+ * @url /v2/trips/:tripId
+*/
+    app.route('/v2/trips/:tripId')
+        .get(authController.verifyUser(["MANAGER"]),trips.read_a_trip)
+        .put(authController.verifyUser(["MANAGER"]),trips.update_a_trip)
+        .delete(trips.delete_a_trip);
 
 
 //     /**

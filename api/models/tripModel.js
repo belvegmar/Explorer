@@ -157,11 +157,11 @@ TripSchema.pre('validate', function (next) {
 
 
 //TICKERS CAN'T BE MODIFIED
-TripSchema.pre('findOneAndUpdate', function(next){
-  if(this._update.ticker){
-    delete this._update.ticker;
+TripSchema.pre('findOneAndUpdate', function(callback){
+  if(this._update.ticker!=null){
+    delete this._update.ticker;    
   }
-  next();
+  callback();
 });
 
 

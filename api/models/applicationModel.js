@@ -8,12 +8,11 @@ var ApplicationSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  status: [{
+  status: {
     type: String,
-    required: 'Kindly enter the status',
     default: 'PENDING',
     enum: ['PENDING', 'REJECTED', 'DUE', 'ACCEPTED', 'CANCELLED']
-  }],
+  },
   comments: [String],
   rejectedReason: {
     type: String
@@ -24,11 +23,13 @@ var ApplicationSchema = new Schema({
   },
   trip: {
     type: Schema.Types.ObjectId,
-    ref: 'Trips'
+    ref: 'Trips',
+    required: 'Kindly enter the trip'
   },
   explorer: {
     type: Schema.Types.ObjectId,
     ref: 'Actors',
+    required: 'Kindly enter the explorer'
   }
 },
   { strict: false });
@@ -45,7 +46,7 @@ ApplicationSchema.pre('validate', function (next) {
         return next(err);
       }
       if (!result) {
-        application.invalidate('trip', 'Trip id ${application.trip} does not reference an existing trip', application.trip);
+        application.invalidate('trip', `Trip id ${application.trip} does not reference an existing trip`, application.trip);
       }
       return next();
     });
@@ -66,10 +67,10 @@ ApplicationSchema.pre('validate', function (next) {
         return next(err);
       }
       if (!result) {
-        application.invalidate('actor', 'Explorer id ${application.explorer} does not reference an existing Explorer', application.explorer);
+        application.invalidate('actor', `Explorer id ${application.explorer} does not reference an existing Explorer`, application.explorer);
       }
       if(result.role != "EXPLORER"){
-        application.invalidate('actor', 'Actor id ${application.explorer} does not reference an Explorer', application.explorer);
+        application.invalidate('actor', `Actor id ${application.explorer} does not reference an Explorer, its role is ${result.role}`, application.explorer);
       }
       
       return next();

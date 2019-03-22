@@ -38,14 +38,6 @@ var FinderSchema = new Schema({
     }
 }, { strict: false });
 
-
-// ######################################################################################
-//                                      INDEXES
-// ######################################################################################
-
-FinderSchema.index({ keyword: 'text'});
-
-
 function dateValidator(value){
     return this.start <= value;
   }
@@ -59,5 +51,15 @@ function priceValidator(value){
     // Break out if the password hasn't changed
     if (!finder.isModified('priceRange')) return callback();
   }); */
+
+
+// ######################################################################################
+//                                      INDEXES
+// ######################################################################################
+
+FinderSchema.index({ keyword: 'text'});
+
+
+
 
 module.exports = mongoose.model('Finders', FinderSchema);

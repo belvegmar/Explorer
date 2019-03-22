@@ -44,7 +44,7 @@ exports.read_an_application = function (req, res) {
 };
 
 exports.update_an_application = function (req, res) {
-  Application.findOneAndUpdate({ _id: req.params.applicationId }, req.body, { new: true }, function (err, application) {
+  Application.findOneAndUpdate({ _id: req.params.applicationId }, req.body, { new: true, runValidators:true }, function (err, application) {
     if (err) {
       if (err.name == 'ValidationError') {
         res.status(422).send(err);
@@ -82,50 +82,98 @@ exports.delete_all_applications = function (req, res) {
 };
 
 exports.change_status = function(req,res){
-  //Change status of the application only if the actor is manager
   var applicationId = req.params.applicationId;
   var new_status = req.query.status;
   var rejected_reason = req.query.rejected_reason;
-  console.log(new_status);
-
-  Application.find({_id: applicationId}, function(err, application){
-    if(err){
-      console.log(err);
-      res.status(500).send(err);
-    }
-    else{
-      if(application.length==0){
-        res.status(400).send({message: 'There is not anny application with this id'});
+  //Comprobar que el estado es o DUE o ACCEPTED
+  if (new_status=="DUE" || new_status=="ACCEPTED"){
+    Application.find({_id: applicationId}, function(err, application){
+      if(err){
+        console.log(err);
+        res.status(500).send(err);
       }
-      //MANAGER
-      var condition = (application[0].status == "PENDING" && new_status == "REJECTED" && rejected_reason!= null) || 
-      (application[0].status == "PENDING" && new_status == "DUE");
-      if(condition){
-        Application.findOneAndUpdate({_id: applicationId}, {status: req.query.status, rejected_reason: req.query.rejected_reason}, {new:true}, function(err, application){
-          if (err) {
-            if (err.name == 'ValidationError') {
-              res.status(422).send(err);
-            } else {
-              res.status(500).send(err)
-            }
-          }
-          else {
-            res.json(application);
-          }
-        });
-      }
-      
       else{
-        console.log()
-        res.status(400).send({message: `Status of application can't be changed because old status is ${application[0].status} and the new status is ${new_status} and rejected reason is ${rejected_reason}`})
+        if(application.length==0){
+          res.status(400).send({message: 'There is not anny application with this id'});
+        }
+        var condition = (application[0].status == "PENDING" && new_status == "REJECTED" && rejected_reason!= null) || 
+        (application[0].status == "PENDING" && new_status == "DUE");
+        if(condition){
+          Application.findOneAndUpdate({_id: applicationId}, {status: req.query.status, rejected_reason: req.query.rejected_reason}, {new:true}, function(err, application){
+            if (err) {
+              if (err.name == 'ValidationError') {
+                res.status(422).send(err);
+              } else {
+                res.status(500).send(err)
+              }
+            }
+            else {
+              res.json(application);
+            }
+          });
+        }
+        
+        else{
+          console.log()
+          res.status(400).send({message: `Status of application can't be changed because old status is ${application[0].status} and the new status is ${new_status} and rejected reason is ${rejected_reason}`})
+        }
       }
-    }
-  })
+    });
+
+  }else{
+    res.status(422).send("The new status must be DUE or ACCEPTED");
+  }
+
+  
 };
 
-exports.apply = function(req, res){
-  //Explorer --> Apply for a trip published and not started or cancelled
+exports.change_status_v2 = function(req,res){
+  //Comprobar que el MANAGER que está intentando cambiar el estado de la solicitud ha publicado el trip de la solicitud
+  var applicationId = req.params.applicationId;
+  var new_status = req.query.status;
+  var rejected_reason = req.query.rejected_reason;
+  //Comprobar que el estado es o DUE o ACCEPTED
+  if (new_status=="DUE" || new_status=="ACCEPTED"){
+    Application.find({_id: applicationId}, function(err, application){
+      if(err){
+        console.log(err);
+        res.status(500).send(err);
+      }
+      else{
+        if(application.length==0){
+          res.status(400).send({message: 'There is not anny application with this id'});
+        }
+        var condition = (application[0].status == "PENDING" && new_status == "REJECTED" && rejected_reason!= null) || 
+        (application[0].status == "PENDING" && new_status == "DUE");
+        if(condition){
+          Application.findOneAndUpdate({_id: applicationId}, {status: req.query.status, rejected_reason: req.query.rejected_reason}, {new:true}, function(err, application){
+            if (err) {
+              if (err.name == 'ValidationError') {
+                res.status(422).send(err);
+              } else {
+                res.status(500).send(err)
+              }
+            }
+            else {
+              res.json(application);
+            }
+          });
+        }
+        
+        else{
+          console.log()
+          res.status(400).send({message: `Status of application can't be changed because old status is ${application[0].status} and the new status is ${new_status} and rejected reason is ${rejected_reason}`})
+        }
+      }
+    });
+
+  }else{
+    res.status(422).send("The new status must be DUE or ACCEPTED");
+  }
+
+  
 };
+
 
 // /orderedTrips/search?explorer="explorerId"&reverse="false|true"&startFrom="valor"&pageSize="tam"
 exports.search_by_status= function(req,res){

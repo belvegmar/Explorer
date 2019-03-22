@@ -46,6 +46,10 @@ var DataWareHouseSchema = new mongoose.Schema({
   }
 }, { strict: false });
 
+// ######################################################################################
+//                                      INDEXES
+// ######################################################################################
+
 DataWareHouseSchema.index({ computationMoment: -1 });
 
 module.exports = mongoose.model('DataWareHouse', DataWareHouseSchema);
