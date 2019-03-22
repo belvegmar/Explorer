@@ -13,7 +13,7 @@ module.exports = function (app) {
  *    RequiredRoles: None
  * Post an actor 
  *    RequiredRoles: None
- *    Can't be authenticated
+ *    If it is not authentication only Explorers can be created
  * Delete all actors
  *    
  *
@@ -71,6 +71,7 @@ app.route('/v1/actors/:actorId/banned')
  *    RequiredRoles: Administrator
  * Delete all actors
  *     RequiredRoles: Administrator
+ * An authenticated user can't register again
  *    
  *
  * @section actors

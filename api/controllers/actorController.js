@@ -20,23 +20,28 @@ exports.list_all_actors = function (req, res) {
 
 
 exports.create_an_actor = function (req, res) {
-  //Actor can be only created if the user is not registered in the system
-  console.log(Date() + ": " + "POST /v1/actors");
+  //Actor can be only created if there is not authentication and the new role is an EXPLORER
   var new_actor = new Actor(req.body);
-  new_actor.save(function (err, actor) {
-    if (err) {
-      if (err.name == 'ValidationError') {
-        res.status(422).send(err);
-      } else {
-        console.log(Date() + ": " + err);
-        res.status(500).send(err)
+  if(new_actor.role !="EXPLORER"){
+    res.status(422).send("Only can be created an EXPLORER");
+
+  }else {
+    new_actor.save(function (err, actor) {
+      if (err) {
+        if (err.name == 'ValidationError') {
+          res.status(422).send(err);
+        } else {
+          console.log(Date() + ": " + err);
+          res.status(500).send(err)
+        }
       }
-    }
-    else {
-      console.log(Date() + ": " + "New actor with email: '" + actor.email + "' added.");
-      res.status(201).json(actor);
-    }
-  });
+      else {
+        console.log(Date() + ": " + "New actor with email: '" + actor.email + "' added.");
+        res.status(201).json(actor);
+      }
+    });
+  }
+  
 };
 
 

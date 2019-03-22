@@ -106,7 +106,7 @@ app.route('/v1/trips/:tripId/cancel')
  * @url /v2/trips
 */
     app.route('/v2/trips')
-        .get(trips.list_all_trips)
+        .get(authController.verifyUser(["MANAGER", "EXPLORER", "ADMINISTRATOR", "SPONSOR"]),trips.list_all_trips)
         .post(authController.verifyUser(["MANAGER"]), trips.create_a_trip_v2)
         .delete(authController.verifyUser(["MANAGER"]),trips.delete_all_trips)
 
