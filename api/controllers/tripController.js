@@ -118,6 +118,24 @@ exports.read_a_trip = function (req, res) {
   });
 };
 
+exports.read_a_trip_v2 = async function (req, res) {
+  var idToken = req.headers['idToken'];
+  var authenticatedUserId = await authController.getUserId(idToken);
+  var id = req.params.tripId;
+
+  Trip.findById(id, function (err, trip) {
+    if (err) {
+      res.send(err);
+    }
+    else if(trip.manager!=authenticatedUserId){
+      return res.status(401).send("The manager does not manage the trip which is trying to read");
+    }
+    else {
+      res.json(trip);
+    }
+  });
+};
+
 
 
 exports.update_a_trip = function (req, res) {
@@ -153,11 +171,49 @@ exports.update_a_trip = function (req, res) {
   });
 };
 
+exports.update_a_trip_v2 = async function(req,res){
+  var id = req.params.tripId;
+
+  var idToken = req.headers['idToken'];
+  var authenticatedUserId = await authController.getUserId(idToken);
+  var id = req.params.tripId;
+
+  Trip.findOne({ _id: id }, function (err, trip) {
+    if (err) {
+      res.status(500).send(err);
+    }
+    if(!trip){
+      res.status(404).send("Trip not found");
+    }
+    else {
+      if (trip.isPublished) {
+        return res.status(422).send("Validation error: Trip can't be modified because it is published");
+      } 
+      else if (trip.manager != authenticatedUserId){
+        return res.status(401).send("The manager does not manage the trip which is trying to update");
+      }   
+      else {
+        Trip.findOneAndUpdate({ _id: id }, req.body, { new: true }, function (err, trip) {
+          if (err) {
+            if (err.name == "ValidationError") {
+              res.status(422).send(err);
+            } else {
+              res.status(500).send(err);
+            }
+          }
+          else {
+            res.json(trip);
+          }
+        });
+      }
+    }
+  });
+};
 
 
 exports.delete_a_trip = function (req, res) {
   //Check the status is NOT PUBLISHED
-  var id = req.params.tripId;
+  
 
   Trip.findOne({ _id: id }, req.body, { new: true }, function (err, trip) {
     if (err) {
@@ -166,7 +222,9 @@ exports.delete_a_trip = function (req, res) {
     else {
       if (trip.isPublished) {
         return res.status(422).send("Validation error: Trip can't be deleted because it is published");
-      } else {
+      }
+         
+      else {
         Trip.findOneAndDelete({ _id: id }, function (err, trip) {
           if (err) {
             res.status(500).send(err);
@@ -180,14 +238,35 @@ exports.delete_a_trip = function (req, res) {
   });
 };
 
-exports.delete_a_trip_v2 = function (req, res) {
-  //Only if the actor is a Manager and the trip status is NOT PUBLISHED
-  Trip.remove({ _id: req.params.tripId }, function (err, trip) {
+exports.delete_a_trip_v2 = async function (req, res) {
+  //Only if the actor is a Manager, is his trip, and the trip status is NOT PUBLISHED
+
+  var idToken = req.headers['idToken'];
+  var authenticatedUserId = await authController.getUserId(idToken);
+
+  var id = req.params.tripId;
+
+  Trip.findOne({ _id: id }, req.body, { new: true }, function (err, trip) {
     if (err) {
-      res.send(err);
+      res.status(500).send(err);
     }
     else {
-      res.json({ message: 'Trip successfully deleted' });
+      if (trip.isPublished) {
+        return res.status(422).send("Validation error: Trip can't be deleted because it is published");
+      } 
+      else if (trip.manager != authenticatedUserId){
+        return res.status(401).send("The manager does not manage the trip which is trying to delete");
+      }
+      else {
+        Trip.findOneAndDelete({ _id: id }, function (err, trip) {
+          if (err) {
+            res.status(500).send(err);
+          }
+          else {
+            res.json({message: "Trip succesfully deleted"});
+          }
+        });
+      }
     }
   });
 };
