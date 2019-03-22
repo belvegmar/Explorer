@@ -66,8 +66,14 @@ exports.store_json_insertMany = function(req, res) {
     console.log('inserting the json from file: '+sourceFile+', into the Model: '+mongooseModel);
     collectionModel.insertMany(json, function(err,result) {
       if (err) {
-        console.log(err);
-      res.send(err);
+        if (err.name == 'ValidationError') {
+          res.status(422).send(err);
+        } else {
+          console.log(Date() + ": " + err);
+          res.status(500).send(err)
+        }
+       /* console.log(err);
+      res.send(err);*/
       } else {
         response+= 'All documents stored in the collection!';
         console.log(response);
