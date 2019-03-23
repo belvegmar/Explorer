@@ -44,6 +44,31 @@ exports.create_an_actor = function (req, res) {
   
 };
 
+exports.create_an_actor_v2 = function (req, res) {
+  //If the authenticated user is an ADMINISTRATOR, can only create a manager
+  var new_actor = new Actor(req.body);
+  if(new_actor.role !="MANAGER"){
+    res.status(422).send("Only can be created a MANAGER");
+
+  }else {
+    new_actor.save(function (err, actor) {
+      if (err) {
+        if (err.name == 'ValidationError') {
+          res.status(422).send(err);
+        } else {
+          console.log(Date() + ": " + err);
+          res.status(500).send(err)
+        }
+      }
+      else {
+        console.log(Date() + ": " + "New actor with email: '" + actor.email + "' added.");
+        res.status(201).json(actor);
+      }
+    });
+  }
+  
+};
+
 
 exports.read_an_actor = function (req, res) {
   console.log(Date() + ": " + "GET /v1/actors/:actorId");

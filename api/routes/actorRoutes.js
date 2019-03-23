@@ -11,9 +11,10 @@ module.exports = function (app) {
   /**
  * Get actors 
  *    RequiredRoles: None
- * Post an actor 
+ * Post an Actor 
  *    RequiredRoles: None
  *    If it is not authentication only Explorers can be created
+ *    If the user authenticated is an ADMINISTRATOR he/she can creates MANAGER * 
  * Delete all actors
  *    
  *
@@ -73,17 +74,19 @@ app.route('/v1/actors/:actorId/banned')
  *    RequiredRoles: Administrator
  * Delete all actors
  *     RequiredRoles: Administrator
- * An authenticated user can't register again
+ * Post a Manager:
+ *     RequiredRoles: Administrator
  *    
  *
  * @section actors
  * @type get post delete
  * @url /v2/actors
- * @param {string} role (manager|administrator|explorer|sponsor) 
 */
 app.route('/v2/actors')
 .get(authController.verifyUser(["ADMINISTRATOR"]), actors.list_all_actors)
+.post(authController.verifyUser(["ADMINISTRATOR"]), actors.create_an_actor_v2)
 .delete(authController.verifyUser(["ADMINISTRATOR"]), actors.delete_all_actors);
+
 
 
    /**
