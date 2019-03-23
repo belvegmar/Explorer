@@ -55,6 +55,8 @@ var routesSponsorShips = require('./api/routes/sponsorShipRoutes');
 var routesTrips = require('./api/routes/tripRoutes');
 var routesDataWareHouse = require('./api/routes/dataWareHouseRoutes');
 var routesLogin = require('./api/routes/loginRoutes');
+var routesStore = require('./api/routes/storeRoutes');
+
 
 
 routesActors(app);
@@ -64,6 +66,7 @@ routesSponsorShips(app);
 routesTrips(app);
 routesDataWareHouse(app);
 routesLogin(app);
+routesStore(app);
 
 DataWareHouseTools.createDataWareHouseJob();
 

@@ -31,7 +31,7 @@ var TripSchema = new Schema({
   },
   title: {
     type: String,
-    required: 'Kindly enter the description'
+    required: 'Kindly enter the title'
   },
   description: {
     type: String,
@@ -129,7 +129,7 @@ TripSchema.pre('save', function (callback) {
 
 
 //validate if the MANAGER exists
-TripSchema.pre('validate', function (next) {
+/* TripSchema.pre('validate', function (next) {
   var trip = this;
   var actor_id = trip.manager;
   if (actor_id) {
@@ -154,7 +154,7 @@ TripSchema.pre('validate', function (next) {
     return next();
   }
 });
-
+ */
 
 //TICKERS CAN'T BE MODIFIED
 TripSchema.pre('findOneAndUpdate', function(callback){
