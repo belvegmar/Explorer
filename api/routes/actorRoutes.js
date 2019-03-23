@@ -47,9 +47,11 @@ app.route('/v1/actors/:actorId/banned')
 *    Required role: None
 * Put an actor 
 *    RequiredRoles: None
+* Delete an actor
+     RequiredRoles:None
 *    
 * @section actors
-* @type get post
+* @type get post delete
 * @url /v1/actors/:actorId
 */
 
