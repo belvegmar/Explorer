@@ -189,6 +189,17 @@ function computeRatioApplicationsStatus(callback) {
         }
       }
     }], function (err, res) {
+      if(res[0].ratio.ACCEPTED = "undefined"){
+        res[0].ratio.ACCEPTED = 0;
+      }else if(res[0].ratio.PENDING = "undefined"){
+        res[0].ratio.PENDING = 0;
+      }else if(res[0].ratio.REJECTED = "undefined"){
+        res[0].ratio.REJECTED = 0;
+      }else if(res[0].ratio.CANCELLED = "undefined"){
+        res[0].ratio.CANCELLED = 0;
+      }else if(res[0].ratio.DUE = "undefined"){
+        res[0].ratio.DUE = 0;
+      }
       callback(err, [res[0].ratio.PENDING, res[0].ratio.REJECTED, res[0].ratio.DUE, res[0].ratio.ACCEPTED, res[0].ratio.CANCELLED]);
 
     });
@@ -209,6 +220,9 @@ function computeAvgPriceFinders(callback) {
         { _id: 0 }
     }
   ], function (err, res) {
+    if(res[0].minPriceAvg> res[0].maxPriceAvg){
+      res[0] = 0
+    }
     callback(err, res[0])
   });
 };
