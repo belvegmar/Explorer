@@ -1,6 +1,7 @@
 'use strict';
 module.exports = function(app) {
   var dataWareHouse = require('../controllers/dataWareHouseController');
+  var authController = require('../controllers/authController');
 
  /* ####################################################################################################################
                                           VERSIÓN 1 DE LA API SIN LA AUTENTICACIÓN
@@ -45,8 +46,8 @@ module.exports = function(app) {
 	 * 
 	*/
 	app.route('/v2/dataWareHouse')
-	.get(dataWareHouse.list_all_indicators)
-	.post(dataWareHouse.rebuildPeriod);
+	.get(authController.verifyUser(["ADMINISTRATOR"]),dataWareHouse.list_all_indicators)
+	.post(authController.verifyUser(["ADMINISTRATOR"]),dataWareHouse.rebuildPeriod);
 
 	/**
 	 * Get a list of last computed indicator
@@ -57,6 +58,6 @@ module.exports = function(app) {
 	 * 
 	*/
 	app.route('/v2/dataWareHouse/latest')
-	.get(dataWareHouse.last_indicator);
+	.get(authController.verifyUser(["ADMINISTRATOR"]),dataWareHouse.last_indicator);
 
 };

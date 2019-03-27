@@ -118,10 +118,6 @@ app.route('/v2/actors/:actorId/banned')
  .put(authController.verifyUser(["ADMINISTRATOR","EXPLORER","MANAGER","SPONSOR"]),actors.update_an_actor_v2)
  .delete(authController.verifyUser(["ADMINISTRATOR"]), actors.delete_an_actor); 
 
-
-
-
-
 };
 
 

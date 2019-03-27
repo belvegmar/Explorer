@@ -185,6 +185,8 @@ exports.change_banned_status = function(req,res){
   });
 };
 
+
+
 exports.delete_all_actors = function (req, res) {
   //If authentication version, the actor must be an ADMINISTRATOR
   Actor.remove({}, function (err, actor) {
