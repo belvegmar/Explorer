@@ -180,8 +180,8 @@ function computeRatioApplicationsStatus(callback) {
           "$arrayToObject": {
             "$map": {"input": "$applicationsStatus", "as": "status",
              "in": {
-                "k": { $arrayElemAt: ["$$status._id", 0] },
-                "v": { $divide: ["$$status.numappgroup", { $arrayElemAt: ["$applications.numapp", 0] }] }
+                "k": "$$status._id",
+                "v": { $divide: ["$$status.numappgroup", {$arrayElemAt : ["$applications.numapp",0]}] }
               }
             }
           }
