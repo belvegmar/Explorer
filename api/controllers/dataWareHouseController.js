@@ -210,8 +210,8 @@ function computeAvgPriceFinders(callback) {
     {
       $group: {
         _id: null,
-        minPriceAvg: { $avg: { $arrayElemAt: ["$priceRange.minPrice", 0] } },
-        maxPriceAvg: { $avg: { $arrayElemAt: ["$priceRange.maxPrice", 0] } }
+        minPriceAvg: { $avg:  "$priceRange.minPrice" },
+        maxPriceAvg: { $avg: "$priceRange.maxPrice" }
       }
     },
     {
