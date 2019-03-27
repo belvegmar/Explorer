@@ -8,20 +8,72 @@ var mongoose = require('mongoose'),
 var authController = require('./authController');
 
 exports.list_all_applications = function (req, res) {
-  Application.find({}, function (err, applications) {
-    if (err) {
-      res.send(err);
+  //Para probar, hay que indicar por un query param el manager
+  var authenticatedUserId = req.query.manager;
+
+  //Buscar todos los trips de un manager
+  function retrieveTripsOfManager(manager, callback){
+    Trip.find({manager: manager}, function(err, trips){
+      if (err) {
+        res.send(err);
+      }
+      else {
+        callback(null, trips);
+      }
+
+    });
+  }
+  retrieveTripsOfManager(authenticatedUserId, function(err, trips){
+    if(err){
+      console.log(err);
+    }else{
+      Application.find({trip: {$in: trips}}, function (err, applications) {
+        if (err) {
+          res.send(err);
+        }
+        else {
+          res.json(applications);
+        }
+      });
     }
-    else {
-      res.json(applications);
-    }
+
   });
 };
 
-// exports.list_all_applications_v2 = function (req, res) {
-//   // The actor must be a MANAGER
+exports.list_all_applications_v2 = async function (req, res) {
+  // The actor must be a MANAGER and only can view applications for the trips he/she manages
+  var idToken = req.headers['idtoken'];
+  var authenticatedUserId = await authController.getUserId(idToken);
+  
 
-// };
+  //Buscar todos los trips de un manager
+  function retrieveTripsOfManager(manager, callback){
+    Trip.find({manager: manager}, function(err, trips){
+      if (err) {
+        res.send(err);
+      }
+      else {
+        callback(null, trips);
+      }
+
+    });
+  }
+  retrieveTripsOfManager(authenticatedUserId, function(err, trips){
+    if(err){
+      console.log(err);
+    }else{
+      Application.find({trip: {$in: trips}}, function (err, applications) {
+        if (err) {
+          res.send(err);
+        }
+        else {
+          res.json(applications);
+        }
+      });
+    }
+
+  });
+};
 
 exports.create_an_application = function (req, res) {
   //Requirements
@@ -146,9 +198,11 @@ exports.delete_all_applications = function (req, res) {
 exports.change_status = function (req, res) {
   var applicationId = req.params.applicationId;
   var new_status = req.query.status;
-  var rejected_reason = req.query.rejected_reason;
+
+  var authenticatedUserId = req.query.manager;
+
   //Comprobar que el estado es o DUE o ACCEPTED
-  if (new_status == "DUE" || new_status == "ACCEPTED") {
+  if (new_status == "DUE" || new_status == "REJECTED") {
     Application.find({ _id: applicationId }, function (err, application) {
       if (err) {
         console.log(err);
@@ -158,10 +212,10 @@ exports.change_status = function (req, res) {
         if (application.length == 0) {
           res.status(400).send({ message: 'There is not anny application with this id' });
         }
-        var condition = (application[0].status == "PENDING" && new_status == "REJECTED" && rejected_reason != null) ||
+        var condition = (application[0].status == "PENDING" && new_status == "REJECTED" /*&& application[0].rejected_reason != null*/) ||
           (application[0].status == "PENDING" && new_status == "DUE");
         if (condition) {
-          Application.findOneAndUpdate({ _id: applicationId }, { status: req.query.status, rejected_reason: req.query.rejected_reason }, { new: true }, function (err, application) {
+          Application.findOneAndUpdate({ _id: applicationId }, { status: req.query.status}, { new: true }, function (err, application) {
             if (err) {
               if (err.name == 'ValidationError') {
                 res.status(422).send(err);
@@ -170,14 +224,24 @@ exports.change_status = function (req, res) {
               }
             }
             else {
-              res.json(application);
+              Trip.findOne({_id:application.trip}, function(err,trip){
+                if(err){
+                  res.status(500).send(err);
+                }else{
+                  if (trip.manager!=authenticatedUserId){
+                    res.status(401).send("The manager can't update the application because he/she does not manages the trip");
+                  }else{
+                    res.json(application);
+                  }
+                }
+              })
             }
           });
         }
 
         else {
           console.log()
-          res.status(400).send({ message: `Status of application can't be changed because old status is ${application[0].status} and the new status is ${new_status} and rejected reason is ${rejected_reason}` })
+          res.status(400).send({ message: `Status of application can't be changed because old status is ${application[0].status} and the new status is ${new_status} and rejected reason is ${application[0].rejected_reason}` })
         }
       }
     });
@@ -189,11 +253,15 @@ exports.change_status = function (req, res) {
 
 };
 
-exports.change_status_v2 = function (req, res) {
+exports.change_status_v2 = async function (req, res) {
   //Comprobar que el MANAGER que está intentando cambiar el estado de la solicitud ha publicado el trip de la solicitud
   var applicationId = req.params.applicationId;
   var new_status = req.query.status;
   var rejected_reason = req.query.rejected_reason;
+
+  var idToken = req.headers['idtoken'];
+  var authenticatedUserId = await authController.getUserId(idToken);
+
   //Comprobar que el estado es o DUE o ACCEPTED
   if (new_status == "DUE" || new_status == "ACCEPTED") {
     Application.find({ _id: applicationId }, function (err, application) {
@@ -217,7 +285,17 @@ exports.change_status_v2 = function (req, res) {
               }
             }
             else {
-              res.json(application);
+              Trip.findOne({_id:application.trip}, function(err,trip){
+                if(err){
+                  res.status(500).send(err);
+                }else{
+                  if (trip.manager!=authenticatedUserId){
+                    res.status(401).send("The manager can't update the application because he/she does not manages the trip");
+                  }else{
+                    res.jason(application);
+                  }
+                }
+              })
             }
           });
         }

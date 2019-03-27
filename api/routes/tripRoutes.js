@@ -107,7 +107,7 @@ app.route('/v1/trips/:tripId/cancel')
 */
     app.route('/v2/trips')
         .get(authController.verifyUser(["MANAGER", "EXPLORER", "ADMINISTRATOR", "SPONSOR"]),trips.list_all_trips)
-        .post(authController.verifyUser(["MANAGER"]), trips.create_a_trip_v2)
+        .post(authController.verifyUser(["MANAGER"]), trips.create_a_trip_v2) 
         .delete(authController.verifyUser(["MANAGER"]),trips.delete_all_trips)
 
 
@@ -161,7 +161,7 @@ app.route('/v2/trips/search')
 * @url /v2/trips/:tripId/cancel
 */
     app.route('/v2/trips/:tripId/cancel')
-        .put(authController.verifyUser(["MANAGER"]),trips.cancel_trip);
+        .put(authController.verifyUser(["MANAGER"]),trips.cancel_trip_v2);
 
     /**
 

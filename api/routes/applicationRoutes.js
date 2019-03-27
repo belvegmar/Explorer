@@ -20,6 +20,7 @@ module.exports = function (app) {
 * @section trips
 * @type post get delete
 * @url /v1/trips
+* @param {manager}
 */
 app.route('/v1/applications')
 .get(applications.list_all_applications)
@@ -118,7 +119,7 @@ app.route('/v1/applications/:applicationId')
 * @url /v1/trips
 */
    app.route('/v2/applications')
-      .get(authController.verifyUser(["MANAGER"]), applications.list_all_applications)
+      .get(authController.verifyUser(["MANAGER"]), applications.list_all_applications_v2)
       .post(authController.verifyUser(["EXPLORER"]), applications.create_an_application_v2)
 
 
