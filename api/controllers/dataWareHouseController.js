@@ -38,7 +38,7 @@ var CronTime = require('cron').CronTime;
 //'*/30 * * * * *' cada 30 segundos
 //'*/10 * * * * *' cada 10 segundos
 //'* * * * * *' cada segundo
-var rebuildPeriod = '0 0 * * * *';  //El que se usará por defecto
+var rebuildPeriod = '*/10 * * * * *';  //El que se usará por defecto
 var computeDataWareHouseJob;
 
 exports.rebuildPeriod = function (req, res) {
@@ -216,13 +216,11 @@ function computeAvgPriceFinders(callback) {
     },
     {
       $project:
-        { _id: 0 }
+      { mean: {$avg: ["$minPriceAvg", "$maxPriceAvg"]}, _id:0 }
     }
   ], function (err, res) {
-    if(res[0].minPriceAvg> res[0].maxPriceAvg){
-      res[0] = 0
-    }
-    callback(err, res[0])
+  
+    callback(err, res[0].mean)
   });
 };
 
@@ -230,11 +228,11 @@ function computeBottomKeyWords(callback){
   Finder.aggregate([
     { "$sortByCount": "$keyWord" },
     { "$limit": 10 },
-    { $project: { keyWord: "$_id", _id: 0, count: "$count" } }
+    { $project: { keyWord: "$_id", _id: 0} }
   ], function (err, res) {
     var keyWords = [];
     for (var kw in res){
-      keyWords.push(res[kw]);
+      keyWords.push(res[kw].keyWord);
     }
     callback(err, keyWords)
   });
