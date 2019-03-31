@@ -148,7 +148,7 @@ exports.update_an_sponsorShip_v2 = async function (req, res) {
     }
   });
 };
-exports.delete_an_sponsorShip_v2 = function (req, res) {
+exports.delete_an_sponsorShip_v2 = async function (req, res) {
   var idToken = req.headers['idToken'];
   var authenticatedUserId = await authController.getUserId(idToken);
   //Comprobar que es el SPONSOR que posee el sponsorship  

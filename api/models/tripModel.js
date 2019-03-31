@@ -128,33 +128,32 @@ TripSchema.pre('save', function (callback) {
 });
 
 
-//validate if the MANAGER exists
-/* TripSchema.pre('validate', function (next) {
-  var trip = this;
-  var actor_id = trip.manager;
-  if (actor_id) {
-    Actor.findOne({ _id: actor_id }, function (err, result) {
-      if (err) {
-        return next(err);
-      }
-      if (!result) {
-        trip.invalidate('actor', `Manager id ${trip.manager} does not reference an existing Manager`, trip.manager);
-      }else{
-        if (result.role != "MANAGER") {
-          trip.invalidate('actor', `Actor id ${trip.manager} does not reference a Manager`, trip.manager);
-        }
-      }
+// //validate if the MANAGER exists
+// TripSchema.pre('validate', function (next) {
+//   var trip = this;
+//   var actor_id = trip.manager;
+//   if (actor_id) {
+//     Actor.findOne({ _id: actor_id }, function (err, result) {
+//       if (err) {
+//         return next(err);
+//       }
+//       if (!result) {
+//         trip.invalidate('actor', `Manager id ${trip.manager} does not reference an existing Manager`, trip.manager);
+//       }else{
+//         if (result.role != "MANAGER") {
+//           trip.invalidate('actor', `Actor id ${trip.manager} does not reference a Manager`, trip.manager);
+//         }
+//       }
       
 
-      return next();
-    });
-  }
+//       return next();
+//     });
+//   }
 
-  else {
-    return next();
-  }
-});
- */
+//   else {
+//     return next();
+//   }
+// });
 
 //TICKERS CAN'T BE MODIFIED
 TripSchema.pre('findOneAndUpdate', function(callback){
@@ -171,7 +170,8 @@ TripSchema.pre('findOneAndUpdate', function(callback){
 // ######################################################################################
 
 TripSchema.index({ ticker: 'text', title: 'text', description: 'text'}, {weights: {ticker:10, title:5, description:1}});
-TripSchema.index({ price: 1, startDate: -1, endDate: 1 }); //1 ascending,  -1 descending
+TripSchema.index({ price: 1, startDate: 1, endDate: 1 }); //1 ascending,  -1 descending
+TripSchema.index({manager:1})
 
 
 

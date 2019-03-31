@@ -83,8 +83,6 @@ ActorSchema.methods.verifyPassword = function (password, cb) {
 };
 
 
-// ######################################################################################
-//                                      INDEXES
-// ######################################################################################
+
 
 module.exports = mongoose.model('Actors', ActorSchema);

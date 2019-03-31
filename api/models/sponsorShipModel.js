@@ -68,10 +68,10 @@ SponsorShipSchema.pre('validate', function (next) {
         return next(err);
       }
       else if (result==null) {
-        sponsorShip.invalidate('actor', `Actor id ${sponsorShip.explorer} does not reference an existing Actor`, sponsorShip.sponsor);
+        sponsorShip.invalidate('actor', `Actor id ${sponsorShip.sponsor} does not reference an existing Actor`, sponsorShip.sponsor);
       }
       else if(result.role != "SPONSOR"){
-        sponsorShip.invalidate('actor', `Actor id ${sponsorShip.explorer} does not reference an Sponsor`, sponsorShip.sponsor);
+        sponsorShip.invalidate('actor', `Actor id ${sponsorShip.sponsor} does not reference an Sponsor`, sponsorShip.sponsor);
       }
       
       return next();
@@ -82,6 +82,14 @@ SponsorShipSchema.pre('validate', function (next) {
     return next();
   }
 });
+
+
+// ######################################################################################
+//                                      INDEXES
+// ######################################################################################
+
+SponsorShipSchema.index({ banner: 'text'});
+
 
 
 module.exports = mongoose.model('SponsorShips', SponsorShipSchema);
