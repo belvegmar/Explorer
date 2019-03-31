@@ -7,7 +7,13 @@ var express = require('express'),
   Finder = require('./api/models/finderModel'),
   SponsorShip = require('./api/models/sponsorShipModel'),
   Trip = require('./api/models/tripModel'),
-  bodyParser = require('body-parser');
+  DataWareHouse = require('./api/models/dataWareHouseModel'),
+  DataWareHouseTools = require('./api/controllers/dataWareHouseController'),
+  bodyParser = require('body-parser'),
+  admin = require('firebase-admin'),
+  serviceAccount = require('./explorer-2de26-firebase-adminsdk-clzsc-8724263a2a.json');
+
+var cors = require('cors');
 
 // MongoDB URI building
 var mongoDBUser = process.env.mongoDBUser || "myUser";
@@ -34,12 +40,23 @@ mongoose.connect(mongoDBURI, {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors());
+
+var adminConfig = {
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://explorer-2de26.firebaseio.com"
+};
+admin.initializeApp(adminConfig);
 
 var routesActors = require('./api/routes/actorRoutes');
 var routesApplications = require('./api/routes/applicationRoutes'); 
 var routesFinders = require('./api/routes/finderRoutes');
 var routesSponsorShips = require('./api/routes/sponsorShipRoutes');
 var routesTrips = require('./api/routes/tripRoutes');
+var routesDataWareHouse = require('./api/routes/dataWareHouseRoutes');
+var routesLogin = require('./api/routes/loginRoutes');
+var routesStore = require('./api/routes/storeRoutes');
+
 
 
 routesActors(app);
@@ -47,6 +64,11 @@ routesApplications(app);
 routesFinders(app);
 routesSponsorShips(app);
 routesTrips(app);
+routesDataWareHouse(app);
+routesLogin(app);
+routesStore(app);
+
+DataWareHouseTools.createDataWareHouseJob();
 
 
 console.log("Connecting DB to: " + mongoDBURI);
@@ -59,3 +81,4 @@ mongoose.connection.on("open", function (err, conn) {
 mongoose.connection.on("error", function (err, conn) {
     console.error("DB init error " + err);
 });
+

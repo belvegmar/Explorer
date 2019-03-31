@@ -15,7 +15,7 @@ var ActorSchema = new Schema({
   email: {
     type: String,
     match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address'],
-    unique: true,
+  //  unique: true,
     required: 'Kindly enter the actor email'
   },
   password: {
@@ -41,9 +41,12 @@ var ActorSchema = new Schema({
     required: 'Kindly enter the user role(s)',
     enum: ['EXPLORER', 'MANAGER', 'SPONSOR', 'ADMINISTRATOR']
   }],
-  validated:{
-    type:Boolean,
-    default:false
+  banned: {
+    type: Boolean,
+    default: false
+  },
+  customToken: {
+    type: String
   },
   created: {
     type: Date,
@@ -78,5 +81,8 @@ ActorSchema.methods.verifyPassword = function (password, cb) {
     cb(null, isMatch);
   });
 };
+
+
+
 
 module.exports = mongoose.model('Actors', ActorSchema);

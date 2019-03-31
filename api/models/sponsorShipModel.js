@@ -44,8 +44,8 @@ SponsorShipSchema.pre('validate', function (next) {
       if (err) {
         return next(err);
       }
-      if (!result) {
-        sponsorShip.invalidate('trip', 'Trip id ${sponsorShip.trip} does not reference an existing trip', sponsorShip.trip);
+      else if (!result) {
+        sponsorShip.invalidate('trip', `Trip id ${sponsorShip.trip} does not reference an existing trip`, sponsorShip.trip);
       }
       return next();
     });
@@ -63,15 +63,15 @@ SponsorShipSchema.pre('validate', function (next) {
   var sponsorShip = this;
   var actor_id = sponsorShip.sponsor;
   if (actor_id) {
-    Actor.findOne({ _id: actor_id }, function (err, result) {
+    Actor.findById(actor_id , function (err, result) {
       if (err) {
         return next(err);
       }
-      if (!result) {
-        sponsorShip.invalidate('actor', 'Explorer id ${sponsorShip.explorer} does not reference an existing Sponsor', sponsorShip.sponsor);
+      else if (result==null) {
+        sponsorShip.invalidate('actor', `Actor id ${sponsorShip.sponsor} does not reference an existing Actor`, sponsorShip.sponsor);
       }
-      if(result.role != "SPONSOR"){
-        sponsorShip.invalidate('actor', 'Actor id ${sponsorShip.explorer} does not reference an Sponsor', sponsorShip.sponsor);
+      else if(result.role != "SPONSOR"){
+        sponsorShip.invalidate('actor', `Actor id ${sponsorShip.sponsor} does not reference an Sponsor`, sponsorShip.sponsor);
       }
       
       return next();
@@ -82,6 +82,14 @@ SponsorShipSchema.pre('validate', function (next) {
     return next();
   }
 });
+
+
+// ######################################################################################
+//                                      INDEXES
+// ######################################################################################
+
+SponsorShipSchema.index({ banner: 'text'});
+
 
 
 module.exports = mongoose.model('SponsorShips', SponsorShipSchema);

@@ -1,7 +1,8 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Actor = require('./actorModel')
+var Actor = require('./actorModel');
+
 
 const generate = require('nanoid/generate');
 const dateFormat = require('dateFormat');
@@ -26,10 +27,11 @@ var StageSchema = new Schema({
 var TripSchema = new Schema({
   ticker: {
     type: String,
+    unique: true
   },
   title: {
     type: String,
-    required: 'Kindly enter the description'
+    required: 'Kindly enter the title'
   },
   description: {
     type: String,
@@ -53,7 +55,13 @@ var TripSchema = new Schema({
     data: Buffer, contentType: String
   },
   isCancelled: {
-    type: Boolean
+    type: Boolean,
+    default: false,
+    validate: [cancelledTripValidator, 'The trip is cancelled so there must be a reason why']
+  },
+  isPublished: {
+    type: Boolean,
+    default: false
   },
   manager: {
     type: Schema.Types.ObjectId,
@@ -73,6 +81,14 @@ function dateValidator(value) {
   return this.startDate <= value;
 }
 
+//A trip may be cancelled, in which case the system must store the reason why
+function cancelledTripValidator(value){
+  if(value == true && this.cancelationReason == null){
+    return false;
+  }
+}
+
+
 
 
 var day = dateFormat(new Date(), "yymmdd")
@@ -90,6 +106,10 @@ TripSchema.pre('save', function (callback) {
 });
 
 TripSchema.pre('findOneAndUpdate', function (next) {
+  //The price is calcullated automatically by stages prices
+  if(!this._update.stages){
+    return next();
+  }
   var stages = this._update.stages;
   var price = 0;
   for (var i = 0; i < stages.length; i++) {
@@ -108,85 +128,50 @@ TripSchema.pre('save', function (callback) {
 });
 
 
-//validate if the MANAGER exists
-TripSchema.pre('validate', function (next) {
-  var trip = this;
-  var actor_id = trip.manager;
-  if (actor_id) {
-    Actor.findOne({ _id: actor_id }, function (err, result) {
-      if (err) {
-        return next(err);
-      }
-      if (!result) {
-        trip.invalidate('actor', `Manager id ${trip.manager} does not reference an existing Manager`, trip.manager);
-      }
-      if (result.role != "MANAGER") {
-        trip.invalidate('actor', `Actor id ${trip.manager} does not reference a Manager`, trip.manager);
-      }
+// //validate if the MANAGER exists
+// TripSchema.pre('validate', function (next) {
+//   var trip = this;
+//   var actor_id = trip.manager;
+//   if (actor_id) {
+//     Actor.findOne({ _id: actor_id }, function (err, result) {
+//       if (err) {
+//         return next(err);
+//       }
+//       if (!result) {
+//         trip.invalidate('actor', `Manager id ${trip.manager} does not reference an existing Manager`, trip.manager);
+//       }else{
+//         if (result.role != "MANAGER") {
+//           trip.invalidate('actor', `Actor id ${trip.manager} does not reference a Manager`, trip.manager);
+//         }
+//       }
+      
 
-      return next();
-    });
-  }
+//       return next();
+//     });
+//   }
 
-  else {
-    return next();
+//   else {
+//     return next();
+//   }
+// });
+
+//TICKERS CAN'T BE MODIFIED
+TripSchema.pre('findOneAndUpdate', function(callback){
+  if(this._update.ticker!=null){
+    delete this._update.ticker;    
   }
+  callback();
 });
 
 
 
-exports.search_trips = function(req, res) {
-  //In further version of the code we will:
-  //1.- control the authorization in order to include deleted trips in the results if the requester is an Administrator.
-  //2.- use indexes to search keywords in 'name', 'description' or 'sku'.
-  var query = {};
-  //Checking if itemName is null or not. If null, all items are returned.
-  query.name = req.query.tripName!=null ? req.query.tripName : /.*/;
+// ######################################################################################
+//                                      INDEXES
+// ######################################################################################
 
-  if(req.query.categoryId){
-    query.category=req.query.categoryId;
-  }
-  
-  if(req.query.deleted){
-    query.deleted = req.query.deleted;
-  }
-
-  var skip=0;
-  if(req.query.startFrom){
-    skip = parseInt(req.query.startFrom);
-  }
-  var limit=0;
-  if(req.query.pageSize){
-    limit=parseInt(req.query.pageSize);
-  }
-
-  var sort="";
-  if(req.query.reverse=="true"){
-    sort="-";
-  }
-  if(req.query.sortedBy){
-    sort+=req.query.sortedBy;
-  }
-
-  console.log("Query: "+query+" Skip:" + skip+" Limit:" + limit+" Sort:" + sort);
-
-  Item.find(query)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .lean()
-      .exec(function(err, item){
-    console.log('Start searching items');
-    if (err){
-      res.send(err);
-    }
-    else{
-      res.json(item);
-    }
-    console.log('End searching items');
-  });
-};
-
+TripSchema.index({ ticker: 'text', title: 'text', description: 'text'}, {weights: {ticker:10, title:5, description:1}});
+TripSchema.index({ price: 1, startDate: 1, endDate: 1 }); //1 ascending,  -1 descending
+TripSchema.index({manager:1})
 
 
 
